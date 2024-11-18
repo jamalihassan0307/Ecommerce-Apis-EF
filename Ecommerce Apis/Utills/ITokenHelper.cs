@@ -2,8 +2,6 @@
 {
     public interface ITokenHelper
     {
-        public string GenerateToken(string UserId, string Role);
-        public bool ValidateToken(string authToken);
-        public string GetUserId(string authToken);
+        string GenerateToken(string userId, string role);
     }
 }
