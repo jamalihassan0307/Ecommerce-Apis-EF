@@ -17,5 +17,5 @@ namespace Ecommerce_Apis.Utills
             return request.HttpContext.User.Claims.Single(o => o.Type == ClaimTypes.Role).Value;
         }
     }
-}
+
 }
