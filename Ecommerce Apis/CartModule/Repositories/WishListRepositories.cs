@@ -80,28 +80,17 @@ namespace Ecommerce_Apis.CartModule.Repositories
             return await _context.SaveChangesAsync() > 0;
         }
 
-        public async Task<bool> DeleteAllUserWishList(string userId)
+      
+
+        public async Task<bool> UpdateWishLists(updateItem model)
         {
-            var wishlists = await _context.WishLists
-                .Where(w => w.UserId == userId)
-                .ToListAsync();
-
-            if (!wishlists.Any()) return false;
-
-            _context.WishLists.RemoveRange(wishlists);
-            return await _context.SaveChangesAsync() > 0;
-        }
-
-        public async Task<bool> UpdateWishLists(UpdateCartRequestDTO model)
-        {
-            foreach (var item in model.Items)
-            {
-                var wishlist = await _context.WishLists.FindAsync(item.CartId);
+           
+                var wishlist = await _context.WishLists.FindAsync(model.CartId);
                 if (wishlist != null)
                 {
-                    wishlist.Quantity = item.Quantity;
+                    wishlist.Quantity = model.Quantity;
                 }
-            }
+          
 
             return await _context.SaveChangesAsync() > 0;
         }

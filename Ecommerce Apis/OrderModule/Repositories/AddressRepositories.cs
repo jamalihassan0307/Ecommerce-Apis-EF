@@ -1,5 +1,4 @@
-﻿
-using Ecommerce_Apis.OrderModule.DTOs;
+﻿using Ecommerce_Apis.OrderModule.DTOs;
 using Ecommerce_Apis.OrderModule.Models;
 using Ecommerce_Apis.OrderModule.Repositories.InterFace;
 using Ecommerce_Apis.ProductModule.DTOs;
@@ -9,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Ecommerce_Apis.Data;
+using Ecommerce_Apis.UserModule.Models;
 
 namespace Ecommerce_Apis.OrderModule.Repositories
 {
@@ -45,7 +45,15 @@ namespace Ecommerce_Apis.OrderModule.Repositories
             return await _context.SaveChangesAsync() > 0;
         }
 
-        public async Task<bool> UpdateAddress(Address request)
+        public async Task<Address> GetAddressById(int id)
+        {
+            return await _context.Addresses
+                .FirstOrDefaultAsync(a => a.Id == id);
+        }
+
+        
+
+        public async Task<bool> UpdateAddress(UpdateAddressDTO request)
         {
             var address = await _context.Addresses.FindAsync(request.Id);
             if (address == null) return false;

@@ -9,7 +9,7 @@ namespace Ecommerce_Apis.Data
         {
             var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
             optionsBuilder.UseMySql(
-                "Server=localhost;Database=ecommerce;User=root;Password=;",
+                "Server=localhost;Database=ecommerce;User=root;Password=;AllowZeroDateTime=true",
                 new MySqlServerVersion(new Version(8, 0, 21))
             );
 

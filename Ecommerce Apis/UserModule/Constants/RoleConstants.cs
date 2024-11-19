@@ -7,9 +7,7 @@ namespace Ecommerce_Apis.UserModule.Constants
         public static readonly Dictionary<int, string> RoleNames = new()
         {
             { (int)UserRoles.Admin, "Admin" },
-            { (int)UserRoles.Customer, "Customer" },
-            { (int)UserRoles.Manager, "Manager" },
-            { (int)UserRoles.DeliveryBoy, "DeliveryBoy" }
+            { (int)UserRoles.Customer, "Customer" }
         };
 
         public static string GetRoleName(int roleId)

@@ -18,7 +18,6 @@ namespace Ecommerce_Apis.CouponModule.Repositories.InterFace
         Task<RandomCouponProductDTO?> GetProductByProductIdCouponIdAsync(string couponId, string productId);
 
         Task<CouponDTO?> GetCouponById(int id);
-        Task<List<RandomCouponProductDTO>> GetProductsByDiscountPercentage(int discountPercentage);
-        Task<List<RandomCouponProductDTO>> GetProductsByDiscountRange(decimal minDiscount, decimal maxDiscount);
+        
     }
 }

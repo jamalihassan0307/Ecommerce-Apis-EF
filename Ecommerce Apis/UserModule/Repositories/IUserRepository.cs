@@ -5,7 +5,7 @@ namespace Ecommerce_Apis.UserModule.Repositories.InterFace
 {
     public interface IUserRepository
     {
-        Task<int> Signup(GetUserResponse request);
+        Task<string> Signup(GetUserResponse request);
         Task<UserModel> LoginEmailPass(UserLoginRequest model);
         Task<List<GetAllUsersResponseWithRoleId>> GetAllUser();
         Task<bool> UpdateUser(GetUpdateRequest request);

@@ -16,21 +16,27 @@ namespace Ecommerce_Apis.Utills
 
         public string GenerateToken(string userId, string role)
         {
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
+            var key = _configuration["Jwt:Key"] ?? throw new InvalidOperationException("JWT Key is not configured");
+            var issuer = _configuration["Jwt:Issuer"] ?? throw new InvalidOperationException("JWT Issuer is not configured");
+
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
-            var Sectoken = new JwtSecurityToken(_configuration["Jwt:Issuer"],
-                _configuration["Jwt:Issuer"],
-                claims: [
-                    new Claim("UserId", userId),
-                    new Claim("Role", role)
-                ],
+            var claims = new[]
+            {
+                new Claim("UserId", userId),
+                new Claim(ClaimTypes.Role, role)
+            };
+
+            var token = new JwtSecurityToken(
+                issuer: issuer,
+                audience: issuer,
+                claims: claims,
                 expires: DateTime.Now.AddDays(2),
-                signingCredentials: credentials);
+                signingCredentials: credentials
+            );
 
-            var token = new JwtSecurityTokenHandler().WriteToken(Sectoken);
-
-            return token;
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
 }

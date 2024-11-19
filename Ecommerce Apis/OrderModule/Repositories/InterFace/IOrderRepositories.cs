@@ -10,12 +10,7 @@ namespace Ecommerce_Apis.OrderModule.Repositories.InterFace
         Task<bool> UpdateOrderStatus(int orderId, string status);
         Task<dynamic> GetOrdersByUserId(string userId);
         Task<dynamic> CancelOrder(int orderId);
-        Task<dynamic> GetOrdersByStatus(string status);
         Task<dynamic> DeleteOrder(int orderId);
-        Task<OrderSummary> GetOrderSummary();
-        Task<MonthlyOrderReport> GetMonthlyOrderReport();
-        Task<OverallOrderReport> GetOverallOrderReport();
-        Task<OrderStatusCount> GetOrderStatusCounts();
         Task<List<OrderUserIDDTOS>> GetAllOrders(IMapper mapper);
     }
 }

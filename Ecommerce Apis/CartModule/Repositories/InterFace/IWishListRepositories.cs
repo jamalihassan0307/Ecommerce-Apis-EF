@@ -8,7 +8,6 @@ namespace Ecommerce_Apis.CartModule.Repositories.InterFace
         Task<List<CartItemDTO>> GetUserWishList(string userId);
         Task<CartItemDTO?> GetWishListById(string userId, int wishlistId);
         Task<bool> DeleteWishListItem(int wishlistId);
-        Task<bool> DeleteAllUserWishList(string userid);
-        Task<bool> UpdateWishLists(UpdateCartRequestDTO model);
+        Task<bool> UpdateWishLists(updateItem model);
     }
 }

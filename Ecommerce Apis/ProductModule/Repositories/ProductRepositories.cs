@@ -231,16 +231,7 @@ namespace Ecommerce_Apis.ProductModule.Repositories
             return await _context.SaveChangesAsync() > 0;
         }
 
-        public async Task<List<ProductIdNameDTO>> GetAllProductIdAndNames()
-        {
-            return await _context.Products
-                .Select(p => new ProductIdNameDTO
-                {
-                    Id = p.Id,
-                    Name = p.Name
-                })
-                .ToListAsync();
-        }
+       
 
         public async Task<bool> DeleteProduct(int id)
         {
@@ -265,27 +256,5 @@ namespace Ecommerce_Apis.ProductModule.Repositories
             }
         }
 
-        public async Task<ProductDTO> GetProductByIdBanner(int productId, IMapper mapper)
-        {
-            return await _context.Products
-                .Include(p => p.Category)
-                .Include(p => p.ProductImages)
-                .Where(p => p.Id == productId)
-                .Select(p => new ProductDTO
-                {
-                    Id = p.Id,
-                    Name = p.Name,
-                    Description = p.Description,
-                    Price = p.Price,
-                    StockQuantity = p.StockQuantity,
-                    ProductURL = p.ProductURL,
-                    CategoryId = p.CategoryId,
-                    CategoryName = p.Category.Name,
-                    ImagePath = p.ProductImages.Select(pi => pi.ImagePath).ToList(),
-                    CreatedAt = p.CreatedAt,
-                    UpdatedAt = p.UpdatedAt
-                })
-                .FirstOrDefaultAsync();
-        }
-    }
+     }
 }

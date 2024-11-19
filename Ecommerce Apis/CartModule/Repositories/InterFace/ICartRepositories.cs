@@ -11,7 +11,6 @@ namespace Ecommerce_Apis.CartModule.Repositories.InterFace
         Task<List<CartItemDTO>> GetUserCart(string userId);
         Task<CartItemDTO> GetCartById(string userId, int cartId);
         Task<bool> DeleteCartItem(int cartId);
-        Task<bool> DeleteAllUserCart(string userid);
-        Task<bool> UpdateCartItems(UpdateCartRequestDTO model);
+        Task<bool> UpdateCartItems(updateItem model);
     }
 }

@@ -26,7 +26,7 @@ namespace Ecommerce_Apis.CartModule.Controllers
         {
             ResponseDTO response = new();
             var role = Request.GetRole();
-            
+
             if (role == "Admin")
             {
                 try
@@ -43,23 +43,32 @@ namespace Ecommerce_Apis.CartModule.Controllers
                     }
 
                     response.Message = MessageDisplay.Banneradderror;
+                    response.Status = 404;
+                    response.IsSuccess = false;
                     return BadRequest(response);
                 }
                 catch (Exception)
                 {
                     response.Message = MessageDisplay.error;
+                    response.Status = 400;
+                    response.IsSuccess = false;
                     return BadRequest(response);
                 }
             }
             else
             {
                 response.Message = MessageDisplay.auth;
+                response.Status = 401;
+                response.IsSuccess = false;
                 return Unauthorized(response);
             }
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllBanners()
+        [AllowAnonymous
+    ]
+
+    public async Task<IActionResult> GetAllBanners()
         {
             ResponseDTO response = new();
             try
@@ -72,6 +81,8 @@ namespace Ecommerce_Apis.CartModule.Controllers
             catch (Exception)
             {
                 response.Message = MessageDisplay.error;
+                response.Status = 404;
+                response.IsSuccess = false;
                 return BadRequest(response);
             }
         }
@@ -93,18 +104,23 @@ namespace Ecommerce_Apis.CartModule.Controllers
             {
                 if (await _bannerRepository.DeleteBanner(Id))
                 {
-                    response.Message = MessageDisplay.cartdelete;
+                    response.Message = MessageDisplay.Bannerdelete;
                     return Ok(response);
                 }
                 else
                 {
-                    response.Message = MessageDisplay.cartdeleteerror;
+                    response.Message = MessageDisplay.Bannerdeleteerror;
+
+                    response.Status = 404;
+                    response.IsSuccess = false;
                     return BadRequest(response);
                 }
             }
             catch (Exception)
             {
                 response.Message = MessageDisplay.error;
+                response.Status = 404;
+                response.IsSuccess = false;
                 return BadRequest(response);
             }
         }

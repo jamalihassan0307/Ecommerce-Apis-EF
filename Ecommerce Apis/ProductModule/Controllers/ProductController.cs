@@ -29,41 +29,39 @@ namespace Ecommerce_Apis.ProductModule.Controllers
         } 
         
         [HttpPost]
-        public  async Task<IActionResult> AddProductWithImages([FromForm] AddUserProductRequest request)
+        [Authorize]
+        public async Task<IActionResult> AddProduct([FromForm] AddUserProductRequest request)
         {
-            
-
-            Product addProductRequest = _mapper.Map<AddUserProductRequest,Product>(request);
             ResponseDTO response = new();
             var role = Request.GetRole();
             if (role == "Admin")
             {
                 try
-            {
-                if (await _productRepository.CreateProductAsync(addProductRequest,request,_environment)) {
-
-                    response.Message = MessageDisplay.Productadd;
-                    return Ok(response);
-             }
-             else
-             {
-
-                    response.Message = MessageDisplay.Producterror;
+                {
+                    var product = _mapper.Map<Product>(request);
+                    
+                    if (await _productRepository.CreateProductAsync(product, request, _environment))
+                    {
+                        response.Message = MessageDisplay.Productadd;
+                        return Ok(response);
+                    }
+                    else
+                    {
+                        response.Message = MessageDisplay.Producterror;
+                        return BadRequest(response);
+                    }
+                }
+                catch (Exception)
+                {
+                    response.Message = MessageDisplay.error;
                     return BadRequest(response);
-             }
-            }
-            catch (Exception ex)
-            {
-                response.Message = MessageDisplay.error;
-                return BadRequest(response);
-            }
+                }
             }
             else
             {
                 response.Message = MessageDisplay.auth;
                 return Unauthorized(response);
             }
-
         }
         [HttpPut]
         public async  Task<IActionResult> UpdateProductAsync([FromForm] UpdateProductRequestDTO request)
@@ -101,7 +99,7 @@ namespace Ecommerce_Apis.ProductModule.Controllers
 
         [HttpGet("{parentId}")]
         [AllowAnonymous]
-        public async Task<IActionResult> FilterProductsByCategory(int parentId)
+        public async Task<IActionResult> GetProductsByCategory(int parentId)
             {
             ResponseDTO response = new();
             try { 
@@ -164,36 +162,6 @@ namespace Ecommerce_Apis.ProductModule.Controllers
 
         }
        
-        [HttpGet]
-        public async Task<IActionResult> GetAllProductIdAndNames()
-        {
-            ResponseDTO response = new();
-            var role = Request.GetRole();
-            if (role == "Admin")
-            {
-                try
-            {
-                var data = await _productRepository.GetAllProductIdAndNames();
-
-                response.Data = data;
-                response.Message = data == null || data.FirstOrDefault() == null ? MessageDisplay.notFound : MessageDisplay.Productget;
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                response.Message = MessageDisplay.error;
-                return BadRequest(response);
-                }
-            }
-            else
-            {
-
-                response.Message = MessageDisplay.Productupdateerror;
-                return BadRequest(response);
-            }
-
-        }
-
 
         [HttpGet]
         public async Task<IActionResult> GetProductById(int productId)
@@ -221,34 +189,7 @@ namespace Ecommerce_Apis.ProductModule.Controllers
                 response.Message = MessageDisplay.auth;
                 return Unauthorized(response);
     }
-} [HttpGet]
-        public async Task<IActionResult> GetProductByIdBanner(int productId)
-        {
-            ResponseDTO response = new();
-            //var role = Request.GetRole();
-            //if (role == "Admin")
-            //{
-                try
-            {
-                var data = await _productRepository.GetProductByIdBanner(productId, _mapper);
-
-                response.Data = data;
-                response.Message = data == null ? MessageDisplay.notFound : MessageDisplay.Productget;
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                response.Message = MessageDisplay.error;
-                return BadRequest(response);
-            }
-            //}
-            //else
-            //{
-            //    response.Message = MessageDisplay.auth;
-            //    return Unauthorized(response);
-            //}
-        }
-        [HttpGet("url")]
+} [HttpGet("url")]
         [AllowAnonymous]
         public async Task<IActionResult>  GetProductByURL(string url)
         {

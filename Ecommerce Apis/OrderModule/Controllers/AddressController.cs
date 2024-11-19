@@ -73,11 +73,13 @@ namespace Ecommerce_Apis.OrderModule.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateAddress([FromBody] Address request)
+        public async Task<IActionResult> UpdateAddress([FromBody] UpdateAddressDTO request)
         {
             ResponseDTO response = new();
             try
             {
+
+                var userId = Request.GetUser();
                 if (await _addressRepository.UpdateAddress(request))
                 {
                     response.Message = MessageDisplay.AddressUpdated;

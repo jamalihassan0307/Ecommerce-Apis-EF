@@ -77,7 +77,7 @@ namespace Ecommerce_Apis.CouponModule.Repositories
 
             if (coupon == null) return false;
 
-            if (request.ProductId.HasValue)
+            if (request.ProductId.HasValue&&request.ProductId!=0)
             {
                 var couponProduct = new CouponProduct
                 {
@@ -245,58 +245,7 @@ namespace Ecommerce_Apis.CouponModule.Repositories
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<List<RandomCouponProductDTO>> GetProductsByDiscountPercentage(int discountPercentage)
-        {
-            return await _context.CouponProducts
-                .Include(cp => cp.Product)
-                .ThenInclude(p => p.ProductImages)
-                .Include(cp => cp.Coupon)
-                .Where(cp => cp.Coupon.DiscountType == "PERCENTAGE" && cp.Coupon.Discount == discountPercentage)
-                .Select(cp => new RandomCouponProductDTO
-                {
-                    ProductId = cp.Product.Id,
-                    ProductName = cp.Product.Name,
-                    Description = cp.Product.Description,
-                    Price = cp.Product.Price,
-                    ProductURL = cp.Product.ProductURL,
-                    StockQuantity = cp.Product.StockQuantity,
-                    CouponId = cp.Coupon.Id.ToString(),
-                    Discount = cp.Coupon.Discount,
-                    DiscountType = cp.Coupon.DiscountType,
-                    ExpirationDate = cp.Coupon.ExpirationDate,
-                    DiscountedPrice = CalculateDiscountedPrice(cp.Product.Price, cp.Coupon),
-                    ImagePaths = cp.Product.ProductImages.Select(pi => pi.ImagePath).ToList()
-                })
-                .ToListAsync();
-        }
-
-        public async Task<List<RandomCouponProductDTO>> GetProductsByDiscountRange(decimal minDiscount, decimal maxDiscount)
-        {
-            return await _context.CouponProducts
-                .Include(cp => cp.Product)
-                .ThenInclude(p => p.ProductImages)
-                .Include(cp => cp.Coupon)
-                .Where(cp => cp.Coupon.DiscountType == "FLAT" && 
-                             cp.Coupon.Discount >= minDiscount && 
-                             cp.Coupon.Discount <= maxDiscount)
-                .Select(cp => new RandomCouponProductDTO
-                {
-                    ProductId = cp.Product.Id,
-                    ProductName = cp.Product.Name,
-                    Description = cp.Product.Description,
-                    Price = cp.Product.Price,
-                    ProductURL = cp.Product.ProductURL,
-                    StockQuantity = cp.Product.StockQuantity,
-                    CouponId = cp.Coupon.Id.ToString(),
-                    Discount = cp.Coupon.Discount,
-                    DiscountType = cp.Coupon.DiscountType,
-                    ExpirationDate = cp.Coupon.ExpirationDate,
-                    DiscountedPrice = CalculateDiscountedPrice(cp.Product.Price, cp.Coupon),
-                    ImagePaths = cp.Product.ProductImages.Select(pi => pi.ImagePath).ToList()
-                })
-                .ToListAsync();
-        }
-
-        // Implement remaining interface methods...
+       
+      
     }
 }

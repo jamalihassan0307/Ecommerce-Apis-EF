@@ -89,7 +89,7 @@ namespace Ecommerce_Apis.CartModule.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateWishListItem(UpdateCartRequestDTO model)
+        public async Task<IActionResult> UpdateWishListItem(updateItem model)
         {
             ResponseDTO response = new();
             try
@@ -136,29 +136,6 @@ namespace Ecommerce_Apis.CartModule.Controllers
             }
         }
 
-        [HttpDelete]
-        public async Task<IActionResult> DeleteAllUserWishList()
-        {
-            ResponseDTO response = new();
-            try
-            {
-                var userId = Request.GetUser();
-                if (await _wishListRepositories.DeleteAllUserWishList(userId))
-                {
-                    response.Message = MessageDisplay.Wishlistdelete;
-                    return Ok(response);
-                }
-                else
-                {
-                    response.Message = MessageDisplay.Wishlistdeleteerror;
-                    return BadRequest(response);
-                }
-            }
-            catch (Exception)
-            {
-                response.Message = MessageDisplay.error;
-                return BadRequest(response);
-            }
-        }
+       
     }
 }

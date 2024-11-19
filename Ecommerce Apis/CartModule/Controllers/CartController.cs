@@ -98,7 +98,7 @@ namespace Ecommerce_Apis.CartModule.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateCartItems(UpdateCartRequestDTO model)
+        public async Task<IActionResult> UpdateCartItems(updateItem model)
         {
             ResponseDTO response = new();
             try
@@ -145,29 +145,6 @@ namespace Ecommerce_Apis.CartModule.Controllers
             }
         }
 
-        [HttpDelete]
-        public async Task<IActionResult> DeleteAllUserCart()
-        {
-            ResponseDTO response = new();
-            try
-            {
-                var userId = Request.GetUser();
-                if (await _cartRepositories.DeleteAllUserCart(userId))
-                {
-                    response.Message = MessageDisplay.cartdelete;
-                    return Ok(response);
-                }
-                else
-                {
-                    response.Message = MessageDisplay.cartdeleteerror;
-                    return BadRequest(response);
-                }
-            }
-            catch (Exception)
-            {
-                response.Message = MessageDisplay.error;
-                return BadRequest(response);
-            }
-        }
+        
     }
 }

@@ -35,11 +35,13 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         {
             ValidateIssuer = true,
             ValidateAudience = true,
-            ValidateLifetime = false,
+            ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            ValidIssuer = jwtIssuer,
-            ValidAudience = jwtIssuer,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Issuer"],
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"] ?? 
+                    throw new InvalidOperationException("JWT Key is not configured")))
         };
     });
 
@@ -53,7 +55,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 // Register Services
 builder.Services.AddScoped<ITokenHelper, TokenHelper>();
 
-builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+// builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
 // Register Repositories
 // User Module
@@ -66,7 +69,6 @@ builder.Services.AddScoped<IWishListRepositories, WishListRepositories>();
 // Order Module
 builder.Services.AddScoped<IOrderRepositories, OrderRepositories>();
 builder.Services.AddScoped<IAddressRepositories, AddressRepositories>();
-builder.Services.AddScoped<IDeliveryBoyRepositories, DeliveryBoyRepositories>();
 
 // Product Module
 builder.Services.AddScoped<IProductRepository, ProductRepositories>();

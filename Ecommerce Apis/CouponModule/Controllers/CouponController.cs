@@ -210,25 +210,7 @@ namespace Ecommerce_Apis.CouponModule.Controllers
             }
         }
 
-        [HttpGet]
-        [AllowAnonymous]
-        public async Task<IActionResult> GetProductsByDiscountPercentage(int discountPercentage)
-        {
-            ResponseDTO response = new();
-            try
-            {
-                var data = await _couponRepositories.GetProductsByDiscountPercentage(discountPercentage);
-                response.Data = data;
-                response.Message = data == null || !data.Any() ? MessageDisplay.notFound : MessageDisplay.couponproductget;
-                return Ok(response);
-            }
-            catch (Exception)
-            {
-                response.Message = MessageDisplay.error;
-                return BadRequest(response);
-            }
-        }
-
+     
         [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> GetCouponsWithProductsAsync()
@@ -248,25 +230,7 @@ namespace Ecommerce_Apis.CouponModule.Controllers
             }
         }
 
-        [HttpGet]
-        [AllowAnonymous]
-        public async Task<IActionResult> GetProductsByDiscountRange(decimal minDiscount, decimal maxDiscount)
-        {
-            ResponseDTO response = new();
-            try
-            {
-                var data = await _couponRepositories.GetProductsByDiscountRange(minDiscount, maxDiscount);
-                response.Data = data;
-                response.Message = data == null || !data.Any() ? MessageDisplay.notFound : MessageDisplay.couponproductget;
-                return Ok(response);
-            }
-            catch (Exception)
-            {
-                response.Message = MessageDisplay.error;
-                return BadRequest(response);
-            }
-        }
-
+       
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCoupon(int id)
         {

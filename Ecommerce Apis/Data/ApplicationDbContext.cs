@@ -1,11 +1,5 @@
 // using Microsoft.EntityFrameworkCore;
 // using Ecommerce_Apis.UserModule.Models;
-// using Ecommerce_Apis.BannerModule.Models;
-// using Ecommerce_Apis.CartModule.Models;
-// using Ecommerce_Apis.CouponModule.Models;
-// using Ecommerce_Apis.OrderModule.Models;
-// using Ecommerce_Apis.ProductModule.Models;
-// using Ecommerce_Apis.UserModule.Enums;
 
 // namespace Ecommerce_Apis.Data
 // {
@@ -17,67 +11,33 @@
 //         }
 
 //         public DbSet<User> Users { get; set; }
-//         public DbSet<Banner> Banners { get; set; }
-//         public DbSet<Cart> Carts { get; set; }
-//         public DbSet<WishList> WishLists { get; set; }
-//         public DbSet<Coupon> Coupons { get; set; }
-//         public DbSet<CouponProduct> CouponProducts { get; set; }
-//         public DbSet<CouponCategory> CouponCategories { get; set; }
-//         public DbSet<Order> Orders { get; set; }
-//         public DbSet<OrderItem> OrderItems { get; set; }
-//         public DbSet<Address> Addresses { get; set; }
-//         public DbSet<DeliveryAssignment> DeliveryAssignments { get; set; }
-//         public DbSet<Product> Products { get; set; }
-//         public DbSet<ProductImage> ProductImages { get; set; }
-//         public DbSet<Category> Categories { get; set; }
-//         public DbSet<Review> Reviews { get; set; }
 
 //         protected override void OnModelCreating(ModelBuilder modelBuilder)
 //         {
-//             modelBuilder.Entity<User>()
-//                 .HasIndex(u => u.Email)
-//                 .IsUnique();
+//             modelBuilder.Entity<User>(entity =>
+//             {
+//                 entity.HasKey(e => e.Id);
+                
+//                 entity.HasIndex(e => e.Email)
+//                     .IsUnique();
 
-//             modelBuilder.Entity<CouponProduct>()
-//                 .HasKey(cp => new { cp.CouponId, cp.ProductId });
+//                 entity.Property(e => e.FullName)
+//                     .IsRequired()
+//                     .HasMaxLength(100);
 
-//             modelBuilder.Entity<CouponCategory>()
-//                 .HasKey(cc => new { cc.CouponId, cc.CategoryId });
+//                 entity.Property(e => e.Email)
+//                     .IsRequired()
+//                     .HasMaxLength(100);
 
-//             modelBuilder.Entity<DeliveryAssignment>()
-//                 .HasOne(d => d.Order)
-//                 .WithOne(o => o.DeliveryAssignment)
-//                 .HasForeignKey<DeliveryAssignment>(d => d.OrderId);
+//                 entity.Property(e => e.PhoneNumber)
+//                     .HasMaxLength(20);
 
-//             modelBuilder.Entity<Order>()
-//                 .HasMany(o => o.OrderItems)
-//                 .WithOne(oi => oi.Order)
-//                 .HasForeignKey(oi => oi.OrderId)
-//                 .OnDelete(DeleteBehavior.Cascade);
+//                 entity.Property(e => e.Image)
+//                     .HasMaxLength(255);
 
-//             modelBuilder.Entity<Category>()
-//                 .HasOne(c => c.ParentCategory)
-//                 .WithMany(c => c.SubCategories)
-//                 .HasForeignKey(c => c.ParentId)
-//                 .OnDelete(DeleteBehavior.Restrict);
-
-//             modelBuilder.Entity<Product>()
-//                 .HasOne(p => p.Category)
-//                 .WithMany(c => c.Products)
-//                 .HasForeignKey(p => p.CategoryId)
-//                 .OnDelete(DeleteBehavior.Restrict);
-
-//             modelBuilder.Entity<ProductImage>()
-//                 .HasOne(pi => pi.Product)
-//                 .WithMany(p => p.ProductImages)
-//                 .HasForeignKey(pi => pi.ProductId)
-//                 .OnDelete(DeleteBehavior.Cascade);
-
-//             modelBuilder.Entity<Review>()
-//                 .HasOne(r => r.Product)
-//                 .WithMany(p => p.Reviews)
-//                 .HasForeignKey(r => r.ProductId)
-//                 .OnDelete(DeleteBehavior.Cascade);
+//                 entity.Property(e => e.RoleId)
+//                     .IsRequired();
+//             });
 //         }
 //     }
 // } 

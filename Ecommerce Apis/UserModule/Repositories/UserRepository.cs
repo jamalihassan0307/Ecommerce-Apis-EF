@@ -22,7 +22,7 @@ namespace Ecommerce_Apis.UserModule.Repositories
             _configuration = configuration;
         }
 
-        public async Task<int> Signup(GetUserResponse request)
+        public async Task<string> Signup(GetUserResponse request)
         {
             var user = new User
             {
@@ -37,7 +37,7 @@ namespace Ecommerce_Apis.UserModule.Repositories
 
             _context.Users.Add(user);
              await _context.SaveChangesAsync();
-            return int.Parse(user.Id);
+            return user.Id;
         }
 
         public async Task<UserModel> LoginEmailPass(UserLoginRequest model)

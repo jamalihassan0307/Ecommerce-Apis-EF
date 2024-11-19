@@ -81,29 +81,18 @@ namespace Ecommerce_Apis.CartModule.Repositories
             return await _context.SaveChangesAsync() > 0;
         }
 
-        public async Task<bool> DeleteAllUserCart(string userId)
+        
+
+        public async Task<bool> UpdateCartItems(updateItem model)
         {
-            var carts = await _context.Carts
-                .Where(c => c.UserId == userId)
-                .ToListAsync();
-
-            if (!carts.Any()) return false;
-
-            _context.Carts.RemoveRange(carts);
-            return await _context.SaveChangesAsync() > 0;
-        }
-
-        public async Task<bool> UpdateCartItems(UpdateCartRequestDTO model)
-        {
-            foreach (var item in model.Items)
-            {
-                var cart = await _context.Carts.FindAsync(item.CartId);
+            
+                var cart = await _context.Carts.FindAsync(model.CartId);
                 if (cart != null)
                 {
-                    cart.Quantity = item.Quantity;
+                    cart.Quantity = model.Quantity;
                     _context.Entry(cart).State = EntityState.Modified;
                 }
-            }
+            
 
             return await _context.SaveChangesAsync() > 0;
         }

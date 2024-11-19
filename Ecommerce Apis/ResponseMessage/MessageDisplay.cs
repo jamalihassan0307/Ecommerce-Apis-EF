@@ -23,6 +23,9 @@
         public const string Bannerget = "Banner Get Successfully";
         public const string Banneradderror = "Error occurred while creating the banner.";
 
+        public const string Bannerdelete = "Banner Delete Successfully";
+        public const string Bannerdeleteerror = "Error occurred while deleting the Banner.";
+
 
 
         /// ////////////////////cart//////////////////////////////////////// 

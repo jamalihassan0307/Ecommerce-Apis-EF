@@ -32,4 +32,4 @@ namespace Ecommerce_Apis.UserModule.Models
         [NotMapped]
         public string RoleName => RoleConstants.GetRoleName(RoleId);
     }
-} 
+}

@@ -31,9 +31,33 @@ namespace Ecommerce_Apis.Data
         public DbSet<ProductImage> ProductImages { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Review> Reviews { get; set; }
-
+ 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+             modelBuilder.Entity<User>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            
+            entity.HasIndex(e => e.Email)
+                .IsUnique();
+
+            entity.Property(e => e.FullName)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            entity.Property(e => e.Email)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            entity.Property(e => e.PhoneNumber)
+                .HasMaxLength(20);
+
+            entity.Property(e => e.Image)
+                .HasMaxLength(255);
+
+            entity.Property(e => e.RoleId)
+                .IsRequired();
+        });
             modelBuilder.Entity<User>()
                 .HasIndex(u => u.Email)
                 .IsUnique();

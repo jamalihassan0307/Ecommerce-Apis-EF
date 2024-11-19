@@ -103,7 +103,7 @@ namespace Ecommerce_Apis.OrderModule.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetOrdersByUserId()
+        public async Task<IActionResult> GetOrders()
         {
             var userId = Request.GetUser();
             ResponseDTO response = new();
@@ -139,33 +139,7 @@ namespace Ecommerce_Apis.OrderModule.Controllers
             }
         }
 
-        [HttpGet("{status}")]
-        public async Task<IActionResult> GetOrdersByStatus(string status)
-        {
-            ResponseDTO response = new();
-            var role = Request.GetRole();
-            if (role == "Admin")
-            {
-                try
-                {
-                    var data = await _orderRepositories.GetOrdersByStatus(status);
-                    response.Message = data == null ? MessageDisplay.notFound : MessageDisplay.Orderupdate;
-                    response.Data = data;
-                    return Ok(response);
-                }
-                catch (Exception)
-                {
-                    response.Message = MessageDisplay.error;
-                    return BadRequest(response);
-                }
-            }
-            else
-            {
-                response.Message = MessageDisplay.auth;
-                return Unauthorized(response);
-            }
-        }
-
+        
         [HttpDelete("{orderId}")]
         public async Task<IActionResult> DeleteOrder(int orderId)
         {
@@ -184,87 +158,8 @@ namespace Ecommerce_Apis.OrderModule.Controllers
             }
         }
 
-        [HttpGet("summary")]
-        public async Task<IActionResult> GetOrderSummary()
-        {
-            ResponseDTO response = new();
-            var role = Request.GetRole();
-            if (role == "Admin")
-            {
-                try
-                {
-                    var data = await _orderRepositories.GetOrderSummary();
-                    response.Data = data;
-                    response.Message = data == null ? MessageDisplay.notFound : MessageDisplay.Orderget;
-                    return Ok(response);
-                }
-                catch (Exception)
-                {
-                    response.Message = MessageDisplay.error;
-                    return BadRequest(response);
-                }
-            }
-            else
-            {
-                response.Message = MessageDisplay.auth;
-                return Unauthorized(response);
-            }
-        }
-
-        [HttpGet("monthly-order-report")]
-        public async Task<IActionResult> GetMonthlyOrderReport()
-        {
-            ResponseDTO response = new();
-            var role = Request.GetRole();
-            if (role == "Admin")
-            {
-                try
-                {
-                    var data = await _orderRepositories.GetMonthlyOrderReport();
-                    response.Data = data;
-                    response.Message = data == null ? MessageDisplay.notFound : MessageDisplay.Orderget;
-                    return Ok(response);
-                }
-                catch (Exception)
-                {
-                    response.Message = MessageDisplay.error;
-                    return BadRequest(response);
-                }
-            }
-            else
-            {
-                response.Message = MessageDisplay.auth;
-                return Unauthorized(response);
-            }
-        }
-
-        [HttpGet("overall-order-report")]
-        public async Task<IActionResult> GetOverallOrderReport()
-        {
-            ResponseDTO response = new();
-            var role = Request.GetRole();
-            if (role == "Admin")
-            {
-                try
-                {
-                    var data = await _orderRepositories.GetOverallOrderReport();
-                    response.Data = data;
-                    response.Message = data == null ? MessageDisplay.notFound : MessageDisplay.Orderget;
-                    return Ok(response);
-                }
-                catch (Exception)
-                {
-                    response.Message = MessageDisplay.error;
-                    return BadRequest(response);
-                }
-            }
-            else
-            {
-                response.Message = MessageDisplay.auth;
-                return Unauthorized(response);
-            }
-        }
-
+        
+        
         [HttpGet("all")]
         public async Task<IActionResult> GetAllOrders()
         {
@@ -292,31 +187,5 @@ namespace Ecommerce_Apis.OrderModule.Controllers
             }
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetOrderStatusCounts()
-        {
-            ResponseDTO response = new();
-            var role = Request.GetRole();
-            if (role == "Admin")
-            {
-                try
-                {
-                    var data = await _orderRepositories.GetOrderStatusCounts();
-                    response.Message = data == null ? MessageDisplay.notFound : MessageDisplay.Orderget;
-                    response.Data = data;
-                    return Ok(response);
-                }
-                catch (Exception)
-                {
-                    response.Message = MessageDisplay.error;
-                    return BadRequest(response);
-                }
-            }
-            else
-            {
-                response.Message = MessageDisplay.auth;
-                return Unauthorized(response);
-            }
-        }
-    }
+     }
 }

@@ -44,10 +44,12 @@ namespace Ecommerce_Apis.UserModule.Controllers
                 addUserRequest.PasswordHash = EncryptionDecryption.Encrypt(request.Password);
                 addUserRequest.Image = await FileManage.UploadAsync(request.Image, _environment);
 
-                int id = await _userRepository.Signup(addUserRequest);
-                if (id != 0)
+
+
+                string id = await _userRepository.Signup(addUserRequest);
+                if (id !="")
                 {
-                    var token = _tokenHelper.GenerateToken(id.ToString(), "Customer");
+                    var token = _tokenHelper.GenerateToken(id, "Customer");
                     response.Data = token;
                     response.Message = "Customer registered successfully.";
                     return Ok(response);
@@ -55,6 +57,8 @@ namespace Ecommerce_Apis.UserModule.Controllers
                 else
                 {
                     response.Message = MessageDisplay.error;
+                    response.Status = 404;
+                    response.IsSuccess = false;
                     return BadRequest(response);
                 }
             }
@@ -62,7 +66,9 @@ namespace Ecommerce_Apis.UserModule.Controllers
             {
                 response.Message = ex.Message.Contains("Duplicate entry") 
                     ? MessageDisplay.emailduplicated 
-                    : MessageDisplay.error;
+                    : MessageDisplay.error; 
+                response.Status = 404;
+                response.IsSuccess = false;
                 return BadRequest(response);
             }
         }
@@ -80,8 +86,8 @@ namespace Ecommerce_Apis.UserModule.Controllers
                     addUserRequest.PasswordHash = EncryptionDecryption.Encrypt(request.Password);
                     addUserRequest.Image = await FileManage.UploadAsync(request.Image, _environment);
 
-                    int id = await _userRepository.Signup(addUserRequest);
-                    if (id != 0)
+                    string id = await _userRepository.Signup(addUserRequest);
+                    if (id!=null)
                     {
                         string token = GetTokenByRole(id, addUserRequest.RoleId);
                         response.Data = token;
@@ -123,7 +129,7 @@ namespace Ecommerce_Apis.UserModule.Controllers
                     return BadRequest(MessageDisplay.LoginIncorrectDetailMessage);
                 }
 
-                string token = GetTokenByRole(int.Parse(user.Id), user.RoleId);
+                string token = GetTokenByRole(user.Id, user.RoleId);
                 response.Message = MessageDisplay.LoginSuccessMessage;
                 response.Data = token;
                 return Ok(response);
@@ -135,7 +141,7 @@ namespace Ecommerce_Apis.UserModule.Controllers
             }
         }
 
-        private string GetTokenByRole(int id, int roleId)
+        private string GetTokenByRole(string id, int roleId)
         {
             return roleId switch
             {
