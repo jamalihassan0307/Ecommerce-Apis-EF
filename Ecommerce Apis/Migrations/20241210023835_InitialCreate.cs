@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
 
-namespace Ecommerce_Apis.Data.Migrations
+namespace Ecommerce_Apis.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration
@@ -18,12 +18,15 @@ namespace Ecommerce_Apis.Data.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Banners",
+                name: "BannersData",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    LinkId = table.Column<int>(type: "int", nullable: false),
+                    Title = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Description = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     Link = table.Column<int>(type: "int", nullable: false),
                     CouponId = table.Column<int>(type: "int", nullable: false),
                     Image = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false)
@@ -31,12 +34,12 @@ namespace Ecommerce_Apis.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Banners", x => x.Id);
+                    table.PrimaryKey("PK_BannersData", x => x.Id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Categories",
+                name: "CategoriesList",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -45,15 +48,17 @@ namespace Ecommerce_Apis.Data.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     ParentId = table.Column<int>(type: "int", nullable: true),
                     ImagePath = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Icon = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Categories", x => x.Id);
+                    table.PrimaryKey("PK_CategoriesList", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Categories_Categories_ParentId",
+                        name: "FK_CategoriesList_CategoriesList_ParentId",
                         column: x => x.ParentId,
-                        principalTable: "Categories",
+                        principalTable: "CategoriesList",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 })
@@ -115,9 +120,9 @@ namespace Ecommerce_Apis.Data.Migrations
                 {
                     table.PrimaryKey("PK_Products", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Products_Categories_CategoryId",
+                        name: "FK_Products_CategoriesList_CategoryId",
                         column: x => x.CategoryId,
-                        principalTable: "Categories",
+                        principalTable: "CategoriesList",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 })
@@ -134,9 +139,9 @@ namespace Ecommerce_Apis.Data.Migrations
                 {
                     table.PrimaryKey("PK_CouponCategories", x => new { x.CouponId, x.CategoryId });
                     table.ForeignKey(
-                        name: "FK_CouponCategories_Categories_CategoryId",
+                        name: "FK_CouponCategories_CategoriesList_CategoryId",
                         column: x => x.CategoryId,
-                        principalTable: "Categories",
+                        principalTable: "CategoriesList",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -350,13 +355,7 @@ namespace Ecommerce_Apis.Data.Migrations
                     Message = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Points = table.Column<double>(type: "double", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    ProductURL = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Fullname = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Image = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4")
+                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -462,8 +461,8 @@ namespace Ecommerce_Apis.Data.Migrations
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Categories_ParentId",
-                table: "Categories",
+                name: "IX_CategoriesList_ParentId",
+                table: "CategoriesList",
                 column: "ParentId");
 
             migrationBuilder.CreateIndex(
@@ -545,7 +544,7 @@ namespace Ecommerce_Apis.Data.Migrations
                 name: "Addresses");
 
             migrationBuilder.DropTable(
-                name: "Banners");
+                name: "BannersData");
 
             migrationBuilder.DropTable(
                 name: "Carts");
@@ -584,7 +583,7 @@ namespace Ecommerce_Apis.Data.Migrations
                 name: "Users");
 
             migrationBuilder.DropTable(
-                name: "Categories");
+                name: "CategoriesList");
 
             migrationBuilder.DropTable(
                 name: "UserRoles");

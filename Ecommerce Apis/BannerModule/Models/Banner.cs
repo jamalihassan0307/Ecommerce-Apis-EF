@@ -7,8 +7,10 @@ namespace Ecommerce_Apis.BannerModule.Models
         [Key]
         public int Id { get; set; }
 
-        public int LinkId { get; set; }
-        
+        public string Title { get; set; }
+
+        public string Description { get; set; }
+
         public int Link { get; set; }
         
         public int CouponId { get; set; }

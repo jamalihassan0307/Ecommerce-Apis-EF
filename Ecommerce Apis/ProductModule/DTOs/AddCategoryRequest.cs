@@ -6,6 +6,7 @@ namespace Ecommerce_Apis.ProductModule.DTOs
         public string Name { get; set; }
         public int? ParentId { get; set; }
         public IFormFile ImagePath { get; set; }
+        public IFormFile Icon { get; set; }
     }
 
 
@@ -14,6 +15,7 @@ namespace Ecommerce_Apis.ProductModule.DTOs
             public string Name { get; set; }
             public int? ParentId { get; set; }
             public string ImagePath { get; set; }
+            public string Icon { get; set; }
 
 
         }

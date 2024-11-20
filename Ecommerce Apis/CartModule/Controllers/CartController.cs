@@ -38,12 +38,16 @@ namespace Ecommerce_Apis.CartModule.Controllers
                 else
                 {
                     response.Message = MessageDisplay.carterror;
+                    response.Status = 404;
+                    response.IsSuccess = false;
                     return BadRequest(response);
                 }
             }
             catch (Exception)
             {
                 response.Message = MessageDisplay.error;
+                response.Status = 404;
+                response.IsSuccess = false;
                 return BadRequest(response);
             }
         }
@@ -63,7 +67,8 @@ namespace Ecommerce_Apis.CartModule.Controllers
             }
             catch (Exception)
             {
-                response.Message = MessageDisplay.error;
+                response.Message = MessageDisplay.error; response.Status = 404;
+                response.IsSuccess = false;
                 return BadRequest(response);
             }
         }
@@ -87,12 +92,16 @@ namespace Ecommerce_Apis.CartModule.Controllers
                 catch (Exception)
                 {
                     response.Message = MessageDisplay.error;
+                    response.Status = 404;
+                    response.IsSuccess = false;
                     return BadRequest(response);
                 }
             }
             else
             {
                 response.Message = MessageDisplay.auth;
+                response.Status = 401;
+                response.IsSuccess = false;
                 return Unauthorized(response);
             }
         }
@@ -111,12 +120,16 @@ namespace Ecommerce_Apis.CartModule.Controllers
                 else
                 {
                     response.Message = MessageDisplay.cartupdateerror;
+                    response.Status = 404;
+                    response.IsSuccess = false;
                     return BadRequest(response);
                 }
             }
             catch (Exception)
             {
                 response.Message = MessageDisplay.error;
+                response.Status = 404;
+                response.IsSuccess = false;
                 return BadRequest(response);
             }
         }
@@ -134,13 +147,17 @@ namespace Ecommerce_Apis.CartModule.Controllers
                 }
                 else
                 {
-                    response.Message = MessageDisplay.cartdeleteerror;
+                    response.Message = MessageDisplay.cartdeleteerror; 
+                    response.Status = 404;
+                    response.IsSuccess = false;
                     return BadRequest(response);
                 }
             }
             catch (Exception)
             {
                 response.Message = MessageDisplay.error;
+                response.Status = 404;
+                response.IsSuccess = false;
                 return BadRequest(response);
             }
         }

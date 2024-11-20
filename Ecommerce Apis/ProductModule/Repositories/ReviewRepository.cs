@@ -17,26 +17,27 @@ namespace Ecommerce_Apis.ProductModule.Repositories
 
         public async Task<bool> AddReviewAsync(AddReviewRequestDTO request, string userId)
         {
-            var review = new Review
+            try
             {
-                ProductId = request.ProductId,
-                UserId = userId,
-                Message = request.Message,
-                Points = request.Points,
-                CreatedAt = DateTime.UtcNow
-            };
+                var product = await _context.Products.FindAsync(request.ProductId);
+                if (product == null) return false;
 
-            _context.Reviews.Add(review);
-            return await _context.SaveChangesAsync() > 0;
-        }
+                var review = new Review
+                {
+                    ProductId = request.ProductId,
+                    UserId = userId,
+                    Message = request.Message,
+                    Points = request.Points,
+                    CreatedAt = DateTime.UtcNow
+                };
 
-        public async Task<bool> DeleteReview(int id)
-        {
-            var review = await _context.Reviews.FindAsync(id);
-            if (review == null) return false;
-
-            _context.Reviews.Remove(review);
-            return await _context.SaveChangesAsync() > 0;
+                _context.Reviews.Add(review);
+                return await _context.SaveChangesAsync() > 0;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         public async Task<List<Review>> GetReviews(int productId)
@@ -52,12 +53,26 @@ namespace Ecommerce_Apis.ProductModule.Repositories
                     UserId = r.UserId,
                     Message = r.Message,
                     Points = r.Points,
-                    CreatedAt = r.CreatedAt,
-                    ProductURL = r.Product.ProductURL,
-                    Fullname = r.User.FullName,
-                    Image = r.User.Image
+                    CreatedAt = r.CreatedAt
                 })
+                .OrderByDescending(r => r.CreatedAt)
                 .ToListAsync();
+        }
+
+        public async Task<bool> DeleteReview(int id)
+        {
+            try
+            {
+                var review = await _context.Reviews.FindAsync(id);
+                if (review == null) return false;
+
+                _context.Reviews.Remove(review);
+                return await _context.SaveChangesAsync() > 0;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

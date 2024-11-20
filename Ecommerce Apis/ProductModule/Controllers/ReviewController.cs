@@ -22,6 +22,7 @@ namespace Ecommerce_Apis.ProductModule.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> AddReview([FromBody] AddReviewRequestDTO request)
         {
             var userId = Request.GetUser();
@@ -29,6 +30,12 @@ namespace Ecommerce_Apis.ProductModule.Controllers
 
             try
             {
+                if (request.Points < 0 || request.Points > 5)
+                {
+                    response.Message = "Points must be between 0 and 5";
+                    return BadRequest(response);
+                }
+
                 if (await _reviewRepository.AddReviewAsync(request, userId))
                 {
                     response.Message = MessageDisplay.Reviewadd;
@@ -48,6 +55,7 @@ namespace Ecommerce_Apis.ProductModule.Controllers
         }
 
         [HttpGet("{productId}")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetReviews(int productId)
         {
             ResponseDTO response = new();
@@ -55,10 +63,7 @@ namespace Ecommerce_Apis.ProductModule.Controllers
             {
                 var data = await _reviewRepository.GetReviews(productId);
                 response.Data = data;
-                response.Message = data == null || !data.Any() 
-                    ? MessageDisplay.notFound 
-                    : MessageDisplay.Reviewget;
-
+                response.Message = !data.Any() ? MessageDisplay.notFound : MessageDisplay.Reviewget;
                 return Ok(response);
             }
             catch (Exception)
@@ -68,38 +73,36 @@ namespace Ecommerce_Apis.ProductModule.Controllers
             }
         }
 
-        [HttpDelete("deleteReview/{id}")]
+        [HttpDelete("{id}")]
         [Authorize]
         public async Task<IActionResult> DeleteReview(int id)
         {
             ResponseDTO response = new();
             var role = Request.GetRole();
 
-            if (role == "Admin")
-            {
-                try
-                {
-                    if (await _reviewRepository.DeleteReview(id))
-                    {
-                        response.Message = MessageDisplay.Reviewdelete;
-                        return Ok(response);
-                    }
-                    else
-                    {
-                        response.Message = MessageDisplay.Reviewdeleteerror;
-                        return BadRequest(response);
-                    }
-                }
-                catch (Exception)
-                {
-                    response.Message = MessageDisplay.error;
-                    return BadRequest(response);
-                }
-            }
-            else
+            if (role != "Admin")
             {
                 response.Message = MessageDisplay.auth;
                 return Unauthorized(response);
+            }
+
+            try
+            {
+                if (await _reviewRepository.DeleteReview(id))
+                {
+                    response.Message = MessageDisplay.Reviewdelete;
+                    return Ok(response);
+                }
+                else
+                {
+                    response.Message = MessageDisplay.Reviewdeleteerror;
+                    return BadRequest(response);
+                }
+            }
+            catch (Exception)
+            {
+                response.Message = MessageDisplay.error;
+                return BadRequest(response);
             }
         }
     }

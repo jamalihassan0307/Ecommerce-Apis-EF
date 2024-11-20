@@ -24,7 +24,7 @@ namespace Ecommerce_Apis.OrderModule.Models
 
         // Navigation properties
         [ForeignKey("OrderId")]
-        public virtual required Order Order { get; set; }
+        public virtual  Order Order { get; set; }
 
         [ForeignKey("ProductId")]
         public virtual Product Product { get; set; }

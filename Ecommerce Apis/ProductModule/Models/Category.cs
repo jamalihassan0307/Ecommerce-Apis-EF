@@ -17,6 +17,9 @@ namespace Ecommerce_Apis.ProductModule.Models
         [Required]
         [MaxLength(255)]
         public string ImagePath { get; set; }
+        [Required]
+        [MaxLength(255)]
+        public string Icon { get; set; }
 
         // Navigation properties
         [ForeignKey("ParentId")]

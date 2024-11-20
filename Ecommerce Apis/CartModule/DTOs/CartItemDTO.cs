@@ -7,10 +7,14 @@ namespace Ecommerce_Apis.CartModule.DTOs
         public int Id { get; set; }
         public int ProductId { get; set; }
         public string ProductName { get; set; }
-        public string Price { get; set; }
+        public decimal OriginalPrice { get; set; }
+        public decimal DiscountedPrice { get; set; }
+        public decimal Discount { get; set; }
+        public string DiscountType { get; set; }
         public int CouponId { get; set; }
         public string ProductURL { get; set; }
         public int Quantity { get; set; }
+        public decimal TotalPrice { get; set; }
         public DateTime CreatedAt { get; set; }
         public List<string> ProductImages { get; set; } = new List<string>();
     }

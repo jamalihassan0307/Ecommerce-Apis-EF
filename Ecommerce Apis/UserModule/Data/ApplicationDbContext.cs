@@ -17,7 +17,7 @@ namespace Ecommerce_Apis.Data
 
         public DbSet<User> Users { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
-        public DbSet<Banner> Banners { get; set; }
+        public DbSet<Banner> BannersData { get; set; }
         public DbSet<Cart> Carts { get; set; }
         public DbSet<WishList> WishLists { get; set; }
         public DbSet<Coupon> Coupons { get; set; }
@@ -29,7 +29,7 @@ namespace Ecommerce_Apis.Data
         public DbSet<DeliveryAssignment> DeliveryAssignments { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductImage> ProductImages { get; set; }
-        public DbSet<Category> Categories { get; set; }
+        public DbSet<Category> CategoriesList { get; set; }
         public DbSet<Review> Reviews { get; set; }
  
         protected override void OnModelCreating(ModelBuilder modelBuilder)

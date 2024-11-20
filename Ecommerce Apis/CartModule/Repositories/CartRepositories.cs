@@ -3,6 +3,7 @@ using Ecommerce_Apis.CartModule.Models;
 using Ecommerce_Apis.CartModule.DTOs;
 using Ecommerce_Apis.CartModule.Repositories.InterFace;
 using Ecommerce_Apis.Data;
+using Ecommerce_Apis.CartModule.Helpers;
 
 namespace Ecommerce_Apis.CartModule.Repositories
 {
@@ -17,6 +18,9 @@ namespace Ecommerce_Apis.CartModule.Repositories
 
         public async Task<bool> CreateCart(AddToCartRequestDTO request, string userId)
         {
+            if (await _context.Carts.AnyAsync(list => list.ProductId == request.ProductId) || request.Quantity != 0)
+                return false;
+
             var cart = new Cart
             {
                 UserId = userId,
@@ -32,23 +36,40 @@ namespace Ecommerce_Apis.CartModule.Repositories
 
         public async Task<List<CartItemDTO>> GetUserCart(string userId)
         {
-            return await _context.Carts
+            var cartItems = await _context.Carts
                 .Include(c => c.Product)
                 .ThenInclude(p => p.ProductImages)
                 .Where(c => c.UserId == userId)
-                .Select(c => new CartItemDTO
+                .Select(c => new
                 {
-                    Id = c.Id,
-                    ProductId = c.ProductId,
-                    ProductName = c.Product.Name,
-                    Price = c.Product.Price.ToString(),
-                    ProductURL = c.Product.ProductURL,
-                    CouponId = c.CouponId,
-                    Quantity = c.Quantity,
-                    CreatedAt = c.CreatedAt,
-                    ProductImages = c.Product.ProductImages.Select(pi => pi.ImagePath).ToList()
+                    Cart = c,
+                    Product = c.Product,
+                    Coupon = c.CouponId != 0 ? _context.Coupons.FirstOrDefault(cp => cp.Id == c.CouponId) : null
                 })
                 .ToListAsync();
+
+            return cartItems.Select(item => new CartItemDTO
+            {
+                Id = item.Cart.Id,
+                ProductId = item.Cart.ProductId,
+                ProductName = item.Product.Name,
+                OriginalPrice = item.Product.Price,
+                DiscountedPrice = item.Coupon != null 
+                    ? PriceCalculator.CalculateDiscountedPrice(item.Product.Price, item.Coupon.DiscountType, item.Coupon.Discount)
+                    : item.Product.Price,
+                Discount = item.Coupon?.Discount ?? 0,
+                DiscountType = item.Coupon?.DiscountType ?? "NONE",
+                CouponId = item.Cart.CouponId,
+                ProductURL = item.Product.ProductURL,
+                Quantity = item.Cart.Quantity,
+                TotalPrice = item.Coupon != null 
+                    ? PriceCalculator.CalculateTotal(
+                        PriceCalculator.CalculateDiscountedPrice(item.Product.Price, item.Coupon.DiscountType, item.Coupon.Discount),
+                        item.Cart.Quantity)
+                    : PriceCalculator.CalculateTotal(item.Product.Price, item.Cart.Quantity),
+                CreatedAt = item.Cart.CreatedAt,
+                ProductImages = item.Product.ProductImages.Select(pi => pi.ImagePath).ToList()
+            }).ToList();
         }
 
         public async Task<CartItemDTO> GetCartById(string userId, int cartId)
@@ -61,9 +82,9 @@ namespace Ecommerce_Apis.CartModule.Repositories
                 {
                     Id = c.Id,
                     ProductId = c.ProductId,
-                    ProductName = c.Product.Name,
-                    Price = c.Product.Price.ToString(),
-                    ProductURL = c.Product.ProductURL,
+                     ProductName = c.Product.Name,
+        OriginalPrice = c.Product.Price,  // Changed from Price to OriginalPrice
+        ProductURL = c.Product.ProductURL,
                     CouponId = c.CouponId,
                     Quantity = c.Quantity,
                     CreatedAt = c.CreatedAt,

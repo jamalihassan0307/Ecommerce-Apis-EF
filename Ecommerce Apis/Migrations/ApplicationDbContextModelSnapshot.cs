@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Ecommerce_Apis.Data.Migrations
+namespace Ecommerce_Apis.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot
@@ -28,6 +28,10 @@ namespace Ecommerce_Apis.Data.Migrations
                     b.Property<int>("CouponId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.Property<string>("Image")
                         .IsRequired()
                         .HasMaxLength(255)
@@ -36,12 +40,13 @@ namespace Ecommerce_Apis.Data.Migrations
                     b.Property<int>("Link")
                         .HasColumnType("int");
 
-                    b.Property<int>("LinkId")
-                        .HasColumnType("int");
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Banners");
+                    b.ToTable("BannersData");
                 });
 
             modelBuilder.Entity("Ecommerce_Apis.CartModule.Models.Cart", b =>
@@ -298,6 +303,11 @@ namespace Ecommerce_Apis.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<string>("Icon")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
+
                     b.Property<string>("ImagePath")
                         .IsRequired()
                         .HasMaxLength(255)
@@ -315,7 +325,7 @@ namespace Ecommerce_Apis.Data.Migrations
 
                     b.HasIndex("ParentId");
 
-                    b.ToTable("Categories");
+                    b.ToTable("CategoriesList");
                 });
 
             modelBuilder.Entity("Ecommerce_Apis.ProductModule.Models.Product", b =>
@@ -393,14 +403,6 @@ namespace Ecommerce_Apis.Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("Fullname")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Image")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
                     b.Property<string>("Message")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -410,10 +412,6 @@ namespace Ecommerce_Apis.Data.Migrations
 
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
-
-                    b.Property<string>("ProductURL")
-                        .IsRequired()
-                        .HasColumnType("longtext");
 
                     b.Property<string>("UserId")
                         .IsRequired()

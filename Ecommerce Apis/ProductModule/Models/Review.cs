@@ -31,9 +31,6 @@ namespace Ecommerce_Apis.ProductModule.Models
         [ForeignKey("UserId")]
         public virtual User User { get; set; }
 
-        // Add these properties to match the mapping
-        public string ProductURL { get; set; }
-        public string Fullname { get; set; }
-        public string Image { get; set; }
+    
     }
 }

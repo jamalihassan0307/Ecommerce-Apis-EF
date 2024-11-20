@@ -32,7 +32,7 @@ namespace Ecommerce_Apis.CartModule.Controllers
                 try
                 {
                     string imagePath = await FileManage.UploadAsync(request.Image, _environment);
-                    var bannerRequest = new BannerRequestDB(request.LinkId, request.Link, imagePath, request.CouponId);
+                    var bannerRequest = new BannerRequestDB(request.title,request.description, request.Link, imagePath, request.CouponId);
                     int bannerId = await _bannerRepository.CreateBannerAsync(bannerRequest);
 
                     if (bannerId > 0)
@@ -73,6 +73,7 @@ namespace Ecommerce_Apis.CartModule.Controllers
             ResponseDTO response = new();
             try
             {
+                
                 var banners = await _bannerRepository.GetAllBannersAsync();
                 response.Data = banners;
                 response.Message = banners == null || !banners.Any() ? MessageDisplay.notFound : MessageDisplay.Bannerget;

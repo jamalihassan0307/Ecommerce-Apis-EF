@@ -39,13 +39,16 @@ namespace Ecommerce_Apis.OrderModule.Controllers
                 }
                 else
                 {
-                    response.Message = MessageDisplay.Addresserror;
+                    response.Message = MessageDisplay.Addresserror; response.Status = 404;
+                    response.IsSuccess = false;
                     return BadRequest(response);
                 }
             }
             catch (Exception)
             {
                 response.Message = MessageDisplay.error;
+                response.Status = 404;
+                response.IsSuccess = false;
                 return BadRequest(response);
             }
         }
@@ -62,11 +65,13 @@ namespace Ecommerce_Apis.OrderModule.Controllers
                 response.Data = data;
 
                 response.Message = data == null || data.FirstOrDefault() == null ? MessageDisplay.notFound : MessageDisplay.Addressget;
-
+                
                 return Ok(response);
             }
             catch (Exception ex)
             {
+                response.Status = 404;
+                response.IsSuccess = false;
                 response.Message = MessageDisplay.error;
                 return BadRequest(response);
             }
@@ -88,12 +93,16 @@ namespace Ecommerce_Apis.OrderModule.Controllers
                 else
                 {
                     response.Message = MessageDisplay.AddressUpdateError;
+                    response.Status = 404;
+                    response.IsSuccess = false;
                     return BadRequest(response);
                 }
             }
             catch (Exception ex)
             {
                 response.Message = MessageDisplay.error;
+                response.Status = 404;
+                response.IsSuccess = false;
                 return BadRequest(response);
             }
         }
@@ -112,12 +121,16 @@ namespace Ecommerce_Apis.OrderModule.Controllers
                 else
                 {
                     response.Message = MessageDisplay.Addressdeleteerror;
+                    response.Status = 404;
+                    response.IsSuccess = false;
                     return BadRequest(response);
                 }
             }
             catch (Exception ex)
             {
                 response.Message = MessageDisplay.error;
+                response.Status = 404;
+                response.IsSuccess = false;
                 return BadRequest(response);
             }
         }

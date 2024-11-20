@@ -3,6 +3,7 @@ using Ecommerce_Apis.BannerModule.Models;
 using Ecommerce_Apis.CartModule.DTOs;
 using Ecommerce_Apis.CartModule.Repositories.InterFace;
 using Ecommerce_Apis.Data;
+using System.Reflection;
 
 namespace Ecommerce_Apis.BannerModule.Repositories
 {
@@ -20,23 +21,25 @@ namespace Ecommerce_Apis.BannerModule.Repositories
             var banner = new Banner
             {
                 Image = request.Image,
-                LinkId = request.LinkId,
+
+                Description = request.Description,Title = request.Title,
                 Link = request.Link,
                 CouponId = request.CouponId
             };
 
-            _context.Banners.Add(banner);
+            _context.BannersData.Add(banner);
             await _context.SaveChangesAsync();
             return banner.Id;
         }
 
         public async Task<IEnumerable<BannerDTO>> GetAllBannersAsync()
         {
-            return await _context.Banners
+            return await _context.BannersData
                 .Select(b => new BannerDTO
                 {
                     Id = b.Id,
-                    LinkId = b.LinkId,
+                   Title = b.Title,
+                    Description = b.Description,
                     Link = b.Link,
                     CouponId = b.CouponId,
                     Image = b.Image
@@ -46,12 +49,13 @@ namespace Ecommerce_Apis.BannerModule.Repositories
 
         public async Task<bool> DeleteBanner(int id)
         {
-            var banner = await _context.Banners.FindAsync(id);
+            var banner = await _context.BannersData.FindAsync(id);
             if (banner == null)
                 return false;
 
-            _context.Banners.Remove(banner);
+            _context.BannersData.Remove(banner);
             return await _context.SaveChangesAsync() > 0;
         }
+    
     }
 }

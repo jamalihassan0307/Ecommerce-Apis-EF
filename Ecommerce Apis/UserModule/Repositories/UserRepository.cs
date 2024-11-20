@@ -24,6 +24,8 @@ namespace Ecommerce_Apis.UserModule.Repositories
 
         public async Task<string> Signup(GetUserResponse request)
         {
+            // Set a default image path if none is provided
+            var defaultImagePath = "/uploads/04800640-96cc-4e6f-bb7f-a8f31c4a5771.jpg";
             var user = new User
             {
                 Id = Guid.NewGuid().ToString(),
@@ -31,14 +33,15 @@ namespace Ecommerce_Apis.UserModule.Repositories
                 Email = request.Email,
                 PasswordHash = request.PasswordHash,
                 PhoneNumber = request.PhoneNumber,
-                Image = request.Image,
+                Image = string.IsNullOrEmpty(request.Image) ? defaultImagePath : request.Image,
                 RoleId = request.RoleId
             };
 
             _context.Users.Add(user);
-             await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
             return user.Id;
         }
+
 
         public async Task<UserModel> LoginEmailPass(UserLoginRequest model)
         {

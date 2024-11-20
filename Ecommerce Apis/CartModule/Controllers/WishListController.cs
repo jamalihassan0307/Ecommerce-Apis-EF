@@ -2,7 +2,7 @@
 using Ecommerce_Apis.CartModule.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Ecommerce_Apis.Utills;
+using Ecommerce_Apis.Utills;    
 using Ecommerce_Apis.CartModule.Repositories.InterFace;
 using Ecommerce_Apis.ResponseMessage;
 
@@ -38,12 +38,16 @@ namespace Ecommerce_Apis.CartModule.Controllers
                 else
                 {
                     response.Message = MessageDisplay.Wishlisterror;
+                    response.Status = 404;
+                    response.IsSuccess = false;
                     return BadRequest(response);
                 }
             }
             catch (Exception)
             {
                 response.Message = MessageDisplay.error;
+                response.Status = 404;
+                response.IsSuccess = false;
                 return BadRequest(response);
             }
         }
@@ -63,7 +67,8 @@ namespace Ecommerce_Apis.CartModule.Controllers
             }
             catch (Exception)
             {
-                response.Message = MessageDisplay.error;
+                response.Message = MessageDisplay.error; response.Status = 404;
+                response.IsSuccess = false;
                 return BadRequest(response);
             }
         }
@@ -83,7 +88,8 @@ namespace Ecommerce_Apis.CartModule.Controllers
             }
             catch (Exception)
             {
-                response.Message = MessageDisplay.error;
+                response.Message = MessageDisplay.error; response.Status = 404;
+                response.IsSuccess = false;
                 return BadRequest(response);
             }
         }
@@ -97,17 +103,21 @@ namespace Ecommerce_Apis.CartModule.Controllers
                 if (await _wishListRepositories.UpdateWishLists(model))
                 {
                     response.Message = MessageDisplay.Wishlistupdate;
+
                     return Ok(response);
                 }
                 else
                 {
                     response.Message = MessageDisplay.Wishlistupdateerror;
+                    response.Status = 404;
+                    response.IsSuccess = false;
                     return BadRequest(response);
                 }
             }
             catch (Exception)
             {
-                response.Message = MessageDisplay.Wishlisterror;
+                response.Message = MessageDisplay.Wishlisterror; response.Status = 404;
+                response.IsSuccess = false;
                 return BadRequest(response);
             }
         }
@@ -126,12 +136,15 @@ namespace Ecommerce_Apis.CartModule.Controllers
                 else
                 {
                     response.Message = MessageDisplay.Wishlistdeleteerror;
+                    response.Status = 404;
+                    response.IsSuccess = false;
                     return BadRequest(response);
                 }
             }
             catch (Exception)
             {
-                response.Message = MessageDisplay.error;
+                response.Message = MessageDisplay.error; response.Status = 404;
+                response.IsSuccess = false;
                 return BadRequest(response);
             }
         }

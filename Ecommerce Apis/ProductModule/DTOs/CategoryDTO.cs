@@ -7,6 +7,7 @@ namespace Ecommerce_Apis.ProductModule.DTOs
         public int? ParentId { get; set; }
         public string ParentName { get; set; }
         public string ImagePath { get; set; }
+        public string Icon { get; set; }
     }
 
     public class UpdateCategoryDTO
@@ -15,6 +16,7 @@ namespace Ecommerce_Apis.ProductModule.DTOs
         public string Name { get; set; }
         public int? ParentId { get; set; }
         public string ImagePath { get; set; }
+        public string Icon { get; set; }
     }
     public class UpdateCategory
     {
@@ -22,5 +24,6 @@ namespace Ecommerce_Apis.ProductModule.DTOs
         public string Name { get; set; }
         public int? ParentId { get; set; }
         public IFormFile ImagePath { get; set; }
+        public IFormFile Icon { get; set; }
     }
 } 
