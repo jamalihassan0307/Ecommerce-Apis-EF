@@ -191,7 +191,7 @@ namespace Ecommerce_Apis.CouponModule.Repositories
                         ExpirationDate = c.ExpirationDate,
                         DiscountedPrice = CalculateDiscountedPrice(cp.Product.Price, c),
                         ImagePaths = cp.Product.ProductImages.Select(pi => pi.ImagePath).ToList()
-                    }).Take(4).ToList()
+                    }).ToList()
                 })
                 .ToListAsync();
 

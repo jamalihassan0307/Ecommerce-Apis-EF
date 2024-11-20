@@ -53,12 +53,16 @@ namespace Ecommerce_Apis.ProductModule.Controllers
                         else
                         {
                             response.Message = MessageDisplay.categoryerror;
+                            response.Status = 404;
+                            response.IsSuccess = false;
                             return BadRequest(response);
                         }
                     }
                     else
                     {
                         response.Message = "Image file is required.";
+                        response.Status = 404;
+                        response.IsSuccess = false;
                         return BadRequest(response);
                     }
                 }
@@ -67,12 +71,16 @@ namespace Ecommerce_Apis.ProductModule.Controllers
                     response.Message = ex.Message.Contains("foreign key constraint") 
                         ? MessageDisplay.categoryParenterror 
                         : MessageDisplay.error;
+                    response.Status = 404;
+                    response.IsSuccess = false;
                     return BadRequest(response);
                 }
             }
             else
             {
-                response.Message = MessageDisplay.auth;
+                response.Message = MessageDisplay.auth; 
+                response.Status = 401;
+                response.IsSuccess = false;
                 return Unauthorized(response);
             }
         }
@@ -91,8 +99,10 @@ namespace Ecommerce_Apis.ProductModule.Controllers
                     var existingCategory = await _categoryRepository.GetCategoryById(request.Id);
                     if (existingCategory == null)
                     {
-                        response.Message = "Category not found.";
+                        response.Message = "Category not found."; response.Status = 404;
+                        response.IsSuccess = false;
                         return NotFound(response);
+
                     }
 
                     var categoryToUpdate = new UpdateCategoryDTO
@@ -117,6 +127,8 @@ namespace Ecommerce_Apis.ProductModule.Controllers
                     else
                     {
                         response.Message = MessageDisplay.categoryupdateerror;
+                        response.Status = 404;
+                        response.IsSuccess = false;
                         return BadRequest(response);
                     }
                 }
@@ -125,12 +137,16 @@ namespace Ecommerce_Apis.ProductModule.Controllers
                     response.Message = ex.Message.Contains("foreign key constraint") 
                         ? MessageDisplay.categoryParenterror 
                         : MessageDisplay.error;
+                    response.Status = 404;
+                    response.IsSuccess = false;
                     return BadRequest(response);
                 }
             }
             else
             {
                 response.Message = MessageDisplay.auth;
+                response.Status = 401;
+                response.IsSuccess = false;
                 return Unauthorized(response);
             }
         }
@@ -152,6 +168,8 @@ namespace Ecommerce_Apis.ProductModule.Controllers
             catch (Exception)
             {
                 response.Message = MessageDisplay.error;
+                response.Status = 404;
+                response.IsSuccess = false;
                 return BadRequest(response);
             }
         }
@@ -167,6 +185,8 @@ namespace Ecommerce_Apis.ProductModule.Controllers
                 if (category == null)
                 {
                     response.Message = MessageDisplay.notFound;
+                    response.Status = 404;
+                    response.IsSuccess = false;
                     return NotFound(response);
                 }
 
@@ -177,6 +197,8 @@ namespace Ecommerce_Apis.ProductModule.Controllers
             catch (Exception)
             {
                 response.Message = MessageDisplay.error;
+                response.Status = 404;
+                response.IsSuccess = false;
                 return BadRequest(response);
             }
         }
@@ -199,20 +221,25 @@ namespace Ecommerce_Apis.ProductModule.Controllers
                     else
                     {
                         response.Message = MessageDisplay.categorydeleteerror;
+                        response.Status = 404;
+                        response.IsSuccess = false;
                         return NotFound(response);
                     }
                 }
                 catch (Exception)
                 {
                     response.Message = MessageDisplay.error;
+                    response.Status = 404;
+                    response.IsSuccess = false;
                     return BadRequest(response);
                 }
             }
             else
             {
-                response.Message = MessageDisplay.auth;
+                response.Message = MessageDisplay.auth; response.Status = 401;
+                response.IsSuccess = false;
                 return Unauthorized(response);
             }
         }
-    }
+    }           
 }

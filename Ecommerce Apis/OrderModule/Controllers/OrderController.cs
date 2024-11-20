@@ -38,6 +38,8 @@ namespace Ecommerce_Apis.OrderModule.Controllers
             catch (Exception)
             {
                 response.Message = MessageDisplay.error;
+                response.Status = 404;
+                response.IsSuccess = false;
                 return BadRequest(response);
             }
         }
@@ -58,13 +60,16 @@ namespace Ecommerce_Apis.OrderModule.Controllers
                 }
                 catch (Exception)
                 {
-                    response.Message = MessageDisplay.error;
+                    response.Message = MessageDisplay.error; response.Status = 404;
+                    response.IsSuccess = false;
                     return BadRequest(response);
                 }
             }
             else
             {
                 response.Message = MessageDisplay.auth;
+                response.Status = 401;
+                response.IsSuccess = false;
                 return Unauthorized(response);
             }
         }
@@ -86,6 +91,8 @@ namespace Ecommerce_Apis.OrderModule.Controllers
                     else
                     {
                         response.Message = MessageDisplay.Orderupdateerror;
+                        response.Status = 404;
+                        response.IsSuccess = false;
                         return BadRequest(response);
                     }
                 }
@@ -97,7 +104,8 @@ namespace Ecommerce_Apis.OrderModule.Controllers
             }
             else
             {
-                response.Message = MessageDisplay.auth;
+                response.Message = MessageDisplay.auth; response.Status = 401;
+                response.IsSuccess = false;
                 return Unauthorized(response);
             }
         }
@@ -116,7 +124,8 @@ namespace Ecommerce_Apis.OrderModule.Controllers
             }
             catch (Exception)
             {
-                response.Message = MessageDisplay.error;
+                response.Message = MessageDisplay.error; response.Status = 404;
+                response.IsSuccess = false;
                 return BadRequest(response);
             }
         }
@@ -135,6 +144,8 @@ namespace Ecommerce_Apis.OrderModule.Controllers
             catch (Exception)
             {
                 response.Message = MessageDisplay.error;
+                response.Status = 404;
+                response.IsSuccess = false;
                 return BadRequest(response);
             }
         }
@@ -153,7 +164,8 @@ namespace Ecommerce_Apis.OrderModule.Controllers
             }
             catch (Exception)
             {
-                response.Message = MessageDisplay.error;
+                response.Message = MessageDisplay.error; response.Status = 404;
+                response.IsSuccess = false;
                 return BadRequest(response);
             }
         }
@@ -176,13 +188,16 @@ namespace Ecommerce_Apis.OrderModule.Controllers
                 }
                 catch (Exception)
                 {
-                    response.Message = MessageDisplay.error;
+                    response.Message = MessageDisplay.error; response.Status = 404;
+                    response.IsSuccess = false;
                     return BadRequest(response);
                 }
             }
             else
             {
                 response.Message = MessageDisplay.auth;
+                response.Status = 401;
+                response.IsSuccess = false;
                 return Unauthorized(response);
             }
         }

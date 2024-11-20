@@ -40,18 +40,24 @@ namespace Ecommerce_Apis.CouponModule.Controllers
                     else
                     {
                         response.Message = MessageDisplay.couponerror;
+                        response.Status = 404;
+                        response.IsSuccess = false;
                         return BadRequest(response);
                     }
                 }
                 catch (Exception)
                 {
                     response.Message = MessageDisplay.error;
+                    response.Status = 404;
+                    response.IsSuccess = false;
                     return BadRequest(response);
                 }
             }
             else
             {
                 response.Message = MessageDisplay.auth;
+                response.Status = 401;
+                response.IsSuccess = false;
                 return Unauthorized(response);
             }
         }
@@ -71,6 +77,8 @@ namespace Ecommerce_Apis.CouponModule.Controllers
             catch (Exception)
             {
                 response.Message = MessageDisplay.error;
+                response.Status = 404;
+                response.IsSuccess = false;
                 return BadRequest(response);
             }
         }
@@ -91,19 +99,24 @@ namespace Ecommerce_Apis.CouponModule.Controllers
                     }
                     else
                     {
-                        response.Message = MessageDisplay.couponupdateerror;
+                        response.Message = MessageDisplay.couponupdateerror; response.Status = 404;
+                        response.IsSuccess = false;
                         return BadRequest(response);
                     }
                 }
                 catch (Exception)
                 {
                     response.Message = MessageDisplay.error;
+                    response.Status = 404;
+                    response.IsSuccess = false;
                     return BadRequest(response);
                 }
             }
             else
             {
                 response.Message = MessageDisplay.auth;
+                response.Status = 401;
+                response.IsSuccess = false;
                 return Unauthorized(response);
             }
         }
@@ -124,13 +137,16 @@ namespace Ecommerce_Apis.CouponModule.Controllers
                 }
                 catch (Exception)
                 {
-                    response.Message = MessageDisplay.error;
+                    response.Message = MessageDisplay.error; response.Status = 404;
+                    response.IsSuccess = false;
                     return BadRequest(response);
                 }
             }
             else
             {
                 response.Message = MessageDisplay.auth;
+                response.Status = 401;
+                response.IsSuccess = false;
                 return Unauthorized(response);
             }
         }
@@ -149,6 +165,8 @@ namespace Ecommerce_Apis.CouponModule.Controllers
             catch (Exception)
             {
                 response.Message = MessageDisplay.error;
+                response.Status = 404;
+                response.IsSuccess = false;
                 return BadRequest(response);
             }
         }
@@ -168,6 +186,8 @@ namespace Ecommerce_Apis.CouponModule.Controllers
             catch (Exception)
             {
                 response.Message = MessageDisplay.error;
+                response.Status = 404;
+                response.IsSuccess = false;
                 return BadRequest(response);
             }
         }
@@ -186,7 +206,8 @@ namespace Ecommerce_Apis.CouponModule.Controllers
             }
             catch (Exception)
             {
-                response.Message = MessageDisplay.error;
+                response.Message = MessageDisplay.error; response.Status = 404;
+                response.IsSuccess = false;
                 return BadRequest(response);
             }
         }
@@ -206,29 +227,33 @@ namespace Ecommerce_Apis.CouponModule.Controllers
             catch (Exception)
             {
                 response.Message = MessageDisplay.error;
+                response.Status = 404;
+                response.IsSuccess = false;
                 return BadRequest(response);
             }
         }
 
      
-        [HttpGet]
-        [AllowAnonymous]
-        public async Task<IActionResult> GetCouponsWithProductsAsync()
-        {
-            ResponseDTO response = new();
-            try
-            {
-                var data = await _couponRepositories.GetCouponsWithProductsAsync();
-                response.Data = data;
-                response.Message = data == null || !data.Any() ? MessageDisplay.notFound : MessageDisplay.couponproductget;
-                return Ok(response);
-            }
-            catch (Exception)
-            {
-                response.Message = MessageDisplay.error;
-                return BadRequest(response);
-            }
-        }
+        //[HttpGet]
+        //[AllowAnonymous]
+        //public async Task<IActionResult> GetCouponsWithProductsAsync()
+        //{
+        //    ResponseDTO response = new();
+        //    try
+        //    {
+        //        var data = await _couponRepositories.GetCouponsWithProductsAsync();
+        //        response.Data = data;
+        //        response.Message = data == null || !data.Any() ? MessageDisplay.notFound : MessageDisplay.couponproductget;
+        //        return Ok(response);
+        //    }
+        //    catch (Exception)
+        //    {
+        //        response.Message = MessageDisplay.error;
+        //        response.Status = 404;
+        //        response.IsSuccess = false;
+        //        return BadRequest(response);
+        //    }
+        //}
 
        
         [HttpDelete("{id}")]
@@ -248,18 +273,24 @@ namespace Ecommerce_Apis.CouponModule.Controllers
                     else
                     {
                         response.Message = MessageDisplay.coupondeleteerror;
+                        response.Status = 404;
+                        response.IsSuccess = false;
                         return BadRequest(response);
                     }
                 }
                 catch (Exception)
                 {
                     response.Message = MessageDisplay.error;
+                    response.Status = 404;
+                    response.IsSuccess = false;
                     return BadRequest(response);
                 }
             }
             else
             {
                 response.Message = MessageDisplay.auth;
+                response.Status = 401;
+                response.IsSuccess = false;
                 return Unauthorized(response);
             }
         }

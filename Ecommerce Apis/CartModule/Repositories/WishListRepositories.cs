@@ -3,6 +3,7 @@ using Ecommerce_Apis.CartModule.Models;
 using Ecommerce_Apis.CartModule.DTOs;
 using Ecommerce_Apis.CartModule.Repositories.InterFace;
 using Ecommerce_Apis.Data;
+using Ecommerce_Apis.CartModule.Helpers;
 
 namespace Ecommerce_Apis.CartModule.Repositories
 {
@@ -31,23 +32,40 @@ namespace Ecommerce_Apis.CartModule.Repositories
 
         public async Task<List<CartItemDTO>> GetUserWishList(string userId)
         {
-            return await _context.WishLists
+            var wishlistItems = await _context.WishLists
                 .Include(w => w.Product)
                 .ThenInclude(p => p.ProductImages)
                 .Where(w => w.UserId == userId)
-                .Select(w => new CartItemDTO
+                .Select(w => new
                 {
-                    Id = w.Id,
-                    ProductId = w.ProductId,
-                    ProductName = w.Product.Name,
-                    Price = w.Product.Price.ToString(),
-                    ProductURL = w.Product.ProductURL,
-                    CouponId = w.CouponId,
-                    Quantity = w.Quantity,
-                    CreatedAt = w.CreatedAt,
-                    ProductImages = w.Product.ProductImages.Select(pi => pi.ImagePath).ToList()
+                    WishList = w,
+                    Product = w.Product,
+                    Coupon = w.CouponId != 0 ? _context.Coupons.FirstOrDefault(cp => cp.Id == w.CouponId) : null
                 })
                 .ToListAsync();
+
+            return wishlistItems.Select(item => new CartItemDTO
+            {
+                Id = item.WishList.Id,
+                ProductId = item.WishList.ProductId,
+                ProductName = item.Product.Name,
+                OriginalPrice = item.Product.Price,
+                DiscountedPrice = item.Coupon != null 
+                    ? PriceCalculator.CalculateDiscountedPrice(item.Product.Price, item.Coupon.DiscountType, item.Coupon.Discount)
+                    : item.Product.Price,
+                Discount = item.Coupon?.Discount ?? 0,
+                DiscountType = item.Coupon?.DiscountType ?? "NONE",
+                CouponId = item.WishList.CouponId,
+                ProductURL = item.Product.ProductURL,
+                Quantity = item.WishList.Quantity,
+                TotalPrice = item.Coupon != null 
+                    ? PriceCalculator.CalculateTotal(
+                        PriceCalculator.CalculateDiscountedPrice(item.Product.Price, item.Coupon.DiscountType, item.Coupon.Discount),
+                        item.WishList.Quantity)
+                    : PriceCalculator.CalculateTotal(item.Product.Price, item.WishList.Quantity),
+                CreatedAt = item.WishList.CreatedAt,
+                ProductImages = item.Product.ProductImages.Select(pi => pi.ImagePath).ToList()
+            }).ToList();
         }
 
         public async Task<CartItemDTO> GetWishListById(string userId, int wishlistId)
@@ -60,9 +78,9 @@ namespace Ecommerce_Apis.CartModule.Repositories
                 {
                     Id = w.Id,
                     ProductId = w.ProductId,
-                    ProductName = w.Product.Name,
-                    Price = w.Product.Price.ToString(),
-                    ProductURL = w.Product.ProductURL,
+                      ProductName = w.Product.Name,
+        OriginalPrice = w.Product.Price,  // Changed from Price to OriginalPrice
+        ProductURL = w.Product.ProductURL,
                     CouponId = w.CouponId,
                     Quantity = w.Quantity,
                     CreatedAt = w.CreatedAt,

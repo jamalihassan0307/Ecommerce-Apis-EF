@@ -22,6 +22,40 @@ namespace Ecommerce_Apis.OrderModule.Repositories
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
+                // First check if any products exist and have sufficient stock
+                var productIds = request.Items.Select(i => i.ProductId).ToList();
+                var products = await _context.Products
+                    .Where(p => productIds.Contains(p.Id))
+                    .ToListAsync();
+
+                // Validate if all products exist and have sufficient stock
+                if (products.Count != request.Items.Count)
+                {
+                    await transaction.RollbackAsync();
+                    return new CreateOrder
+                    {
+                        Message = "One or more products not found",
+                        OrderId = 0,
+                        TotalAmount = 0
+                    };
+                }
+
+                foreach (var item in request.Items)
+                {
+                    var product = products.First(p => p.Id == item.ProductId);
+                    if (product.StockQuantity < item.Quantity)
+                    {
+                        await transaction.RollbackAsync();
+                        return new CreateOrder
+                        {
+                            Message = $"Insufficient stock for product {product.Name}",
+                            OrderId = 0,
+                            TotalAmount = 0
+                        };
+                    }
+                }
+
+                // Create order
                 var order = new Order
                 {
                     UserId = userId,
@@ -34,17 +68,29 @@ namespace Ecommerce_Apis.OrderModule.Repositories
                     TotalAmount = 0
                 };
 
-                _context.Orders.Add(order);
+                await _context.Orders.AddAsync(order);
                 await _context.SaveChangesAsync();
 
                 decimal totalAmount = 0;
+
+                // Add order items and update stock
                 foreach (var item in request.Items)
                 {
-                    var product = await _context.Products.FindAsync(item.ProductId);
-                    if (product == null) 
+                    var product = products.First(p => p.Id == item.ProductId);
+                    decimal itemPrice = product.Price;
+
+                    // Apply coupon if exists
+                    if (item.CouponId.HasValue && item.CouponId.Value != 0)
                     {
-                        await transaction.RollbackAsync();
-                        return null;
+                        var coupon = await _context.Coupons
+                            .FirstOrDefaultAsync(c => c.Id == item.CouponId.Value && c.ExpirationDate > DateTime.UtcNow);
+
+                        if (coupon != null)
+                        {
+                            itemPrice = coupon.DiscountType == "PERCENTAGE"
+                                ? product.Price * (1 - coupon.Discount / 100)
+                                : Math.Max(product.Price - coupon.Discount, product.Price * 0.7m);
+                        }
                     }
 
                     var orderItem = new OrderItem
@@ -52,25 +98,47 @@ namespace Ecommerce_Apis.OrderModule.Repositories
                         OrderId = order.Id,
                         ProductId = item.ProductId,
                         Quantity = item.Quantity,
-                        Price = product.Price,
-                        CouponId = item.CouponId,
-                        Order = order
+                        Price = itemPrice,
+                        CouponId = item.CouponId == 0
+                            ? null
+                            : item.CouponId,
+                     
                     };
 
-                    _context.OrderItems.Add(orderItem);
-                    totalAmount += product.Price * item.Quantity;
+                    await _context.OrderItems.AddAsync(orderItem);
+
+                    // Update product stock
+                    product.StockQuantity -= item.Quantity;
+                    _context.Entry(product).State = EntityState.Modified;
+
+                    totalAmount += itemPrice * item.Quantity;
                 }
 
+                // Update order total
                 order.TotalAmount = totalAmount;
+                _context.Entry(order).State = EntityState.Modified;
+
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
 
-                return new CreateOrder("Order Created Successfully", order.Id);
+                return new CreateOrder
+                {
+                    Message = "Order Created Successfully",
+                    OrderId = order.Id,
+                    TotalAmount = totalAmount
+                };
             }
-            catch
+            catch (Exception ex)
             {
                 await transaction.RollbackAsync();
-                return null;
+                Console.WriteLine($"Error creating order: {ex.Message}");
+                Console.WriteLine($"Inner exception: {ex.InnerException?.Message}");
+                return new CreateOrder
+                {
+                    Message = "Error creating order",
+                    OrderId = 0,
+                    TotalAmount = 0
+                };
             }
         }
 

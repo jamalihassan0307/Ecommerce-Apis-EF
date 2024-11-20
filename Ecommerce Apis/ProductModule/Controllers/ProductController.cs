@@ -48,6 +48,8 @@ namespace Ecommerce_Apis.ProductModule.Controllers
                     else
                     {
                         response.Message = MessageDisplay.Producterror;
+                        response.Status = 404;
+                        response.IsSuccess = false;
                         return BadRequest(response);
                     }
                 }
@@ -60,6 +62,8 @@ namespace Ecommerce_Apis.ProductModule.Controllers
             else
             {
                 response.Message = MessageDisplay.auth;
+                response.Status = 401;
+                response.IsSuccess = false;
                 return Unauthorized(response);
             }
         }
@@ -82,16 +86,21 @@ namespace Ecommerce_Apis.ProductModule.Controllers
             {
 
                     response.Message = MessageDisplay.Productupdateerror;
-                    return BadRequest(response);
+                    response.Status = 404;
+                    response.IsSuccess = false;
+                        return BadRequest(response);
             }
         } catch (Exception ex) {
                 response.Message = MessageDisplay.error;
-                return BadRequest(response);
+                response.Status = 404;
+                response.IsSuccess = false;
+                    return BadRequest(response);
     }
             }
             else
             {
-                response.Message = MessageDisplay.auth;
+                response.Message = MessageDisplay.auth; response.Status = 401;
+                response.IsSuccess = false;
                 return Unauthorized(response);
             }
 
@@ -111,6 +120,8 @@ namespace Ecommerce_Apis.ProductModule.Controllers
                 return Ok(response);
             } catch (Exception ex) {
                 response.Message = MessageDisplay.error;
+                response.Status = 404;
+                response.IsSuccess = false;
                 return BadRequest(response);
             }
            
@@ -132,7 +143,8 @@ namespace Ecommerce_Apis.ProductModule.Controllers
             }
             catch (Exception ex)
             {
-                response.Message = MessageDisplay.error;
+                response.Message = MessageDisplay.error; response.Status = 404;
+                response.IsSuccess = false;
                 return BadRequest(response);
             }
 
@@ -156,7 +168,8 @@ namespace Ecommerce_Apis.ProductModule.Controllers
             }
             catch (Exception ex)
             {
-                response.Message = MessageDisplay.error;
+                response.Message = MessageDisplay.error; response.Status = 404;
+                response.IsSuccess = false;
                 return BadRequest(response);
             }
 
@@ -181,12 +194,16 @@ namespace Ecommerce_Apis.ProductModule.Controllers
             catch (Exception ex)
             {
                 response.Message = MessageDisplay.error;
-                return BadRequest(response);
+                response.Status = 404;
+                response.IsSuccess = false;
+                    return BadRequest(response);
             }
         }
             else
             {
                 response.Message = MessageDisplay.auth;
+                response.Status = 401;
+                response.IsSuccess = false;
                 return Unauthorized(response);
     }
 } [HttpGet("url")]
@@ -205,6 +222,8 @@ namespace Ecommerce_Apis.ProductModule.Controllers
             catch (Exception ex)
             {
                 response.Message = MessageDisplay.error;
+                response.Status = 404;
+                response.IsSuccess = false;
                 return BadRequest(response);
             }
         }
@@ -225,6 +244,8 @@ namespace Ecommerce_Apis.ProductModule.Controllers
                     }
                     else{
                         response.Message= MessageDisplay.notFound ;
+                        response.Status = 404;
+                        response.IsSuccess = false;
                         return BadRequest(response);
                     }
 
@@ -233,13 +254,16 @@ namespace Ecommerce_Apis.ProductModule.Controllers
             }
             catch (Exception ex)
             {
-                response.Message = MessageDisplay.error;
-                return BadRequest(response);
+                response.Message = MessageDisplay.error; response.Status = 404;
+                response.IsSuccess = false;
+                    return BadRequest(response);
             }
             }
             else
             {
                 response.Message = MessageDisplay.auth;
+                response.Status = 401;
+                response.IsSuccess = false;
                 return Unauthorized(response);
             }
         }
@@ -261,20 +285,27 @@ namespace Ecommerce_Apis.ProductModule.Controllers
                 else
                 {
                     response.Message = MessageDisplay.Productdeleteerror;
-                    return BadRequest(response);
+                    response.Status = 404;
+                    response.IsSuccess = false;
+                        return BadRequest(response);
                 }
             }
             catch (Exception ex)
             {
                 response.Message = MessageDisplay.error;
-                return BadRequest(response);
+                response.Status = 404;
+                response.IsSuccess = false;
+                    return BadRequest(response);
             }
             }
             else
             {
                 response.Message = MessageDisplay.auth;
+                response.Status = 401;
+                response.IsSuccess = false;
                 return Unauthorized(response);
             }
         }
     }
 }
+    

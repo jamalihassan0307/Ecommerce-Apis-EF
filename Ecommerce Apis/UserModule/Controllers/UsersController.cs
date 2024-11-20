@@ -6,8 +6,8 @@ using Ecommerce_Apis.Utills;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Ecommerce_Apis.UserModule.Controllers
-{
+namespace Ecommerce_Apis.UserModule.Controllers{
+    
     [Route("api/[controller]/[action]")]
     [ApiController]
     [Authorize]
@@ -97,6 +97,8 @@ namespace Ecommerce_Apis.UserModule.Controllers
                     else
                     {
                         response.Message = MessageDisplay.error;
+                        response.Status = 404;
+                        response.IsSuccess = false;
                         return BadRequest(response);
                     }
                 }
@@ -105,12 +107,16 @@ namespace Ecommerce_Apis.UserModule.Controllers
                     response.Message = ex.Message.Contains("Duplicate entry") 
                         ? MessageDisplay.emailduplicated 
                         : MessageDisplay.error;
+                    response.Status = 404;
+                    response.IsSuccess = false;
                     return BadRequest(response);
                 }
             }
             else
             {
                 response.Message = MessageDisplay.auth;
+                response.Status = 401;
+                response.IsSuccess = false;
                 return Unauthorized(response);
             }
         }
@@ -126,7 +132,10 @@ namespace Ecommerce_Apis.UserModule.Controllers
 
                 if (user == null || !EncryptionDecryption.Match(request.Password, user.PasswordHash))
                 {
-                    return BadRequest(MessageDisplay.LoginIncorrectDetailMessage);
+                    response.Message = MessageDisplay.LoginIncorrectDetailMessage;
+                    response.Status = 404;
+                    response.IsSuccess = false;
+                    return BadRequest(response);
                 }
 
                 string token = GetTokenByRole(user.Id, user.RoleId);
@@ -134,9 +143,11 @@ namespace Ecommerce_Apis.UserModule.Controllers
                 response.Data = token;
                 return Ok(response);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 response.Message = MessageDisplay.error;
+                response.Status = 404;
+                response.IsSuccess = false;
                 return BadRequest(response);
             }
         }
@@ -165,36 +176,5 @@ namespace Ecommerce_Apis.UserModule.Controllers
             };
         }
 
-        [HttpPost]
-        public async Task<IActionResult> AddRole([FromBody] AddRoleRequest request)
-        {
-            ResponseDTO response = new();
-            try
-            {
-                var role = Request.GetRole();
-                if (role == "Admin")
-                {
-                    var addedRole = await _userRepository.AddRole(request);
-                    response.Data = addedRole;
-                    response.Message = "Role added successfully";
-                    return Ok(response);
-                }
-                else
-                {
-                    response.Message = MessageDisplay.auth;
-                    return Unauthorized(response);
-                }
-            }
-            catch (Exception ex)
-            {
-                response.Message = ex.Message.Contains("Duplicate entry") 
-                    ? MessageDisplay.Roleduplicated 
-                    : MessageDisplay.error;
-                return BadRequest(response);
-            }
-        }
-
-        // Continue with other controller methods...
-        // The pattern remains the same - remove Dapper dependencies and use the repository methods
-    }
+ }
 }
