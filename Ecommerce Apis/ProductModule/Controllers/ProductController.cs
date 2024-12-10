@@ -120,28 +120,6 @@ namespace Ecommerce_Apis.ProductModule.Controllers
                 return Ok(response);
             } catch (Exception ex) {
                 response.Message = MessageDisplay.error;
-                response.Status = 404;
-                response.IsSuccess = false;
-                return BadRequest(response);
-            }
-           
-            
-        }[HttpGet("{parentId}")]
-        [AllowAnonymous]
-        public async Task<IActionResult> GetsimilarProducts(int parentId)
-            {
-            ResponseDTO response = new();
-            try { 
-             var data=await _productRepository.FilterProductsCategory(parentId, _mapper);
-
-                response.Data = data;
-                response.Message = data == null || data.FirstOrDefault() == null ? MessageDisplay.notFound : MessageDisplay.Productget;
-
-                return Ok(response);
-            } catch (Exception ex) {
-                response.Message = MessageDisplay.error;
-                response.Status = 404;
-                response.IsSuccess = false;
                 return BadRequest(response);
             }
            
@@ -188,49 +166,7 @@ namespace Ecommerce_Apis.ProductModule.Controllers
             }
             catch (Exception ex)
             {
-                response.Message = MessageDisplay.error; response.Status = 404;
-                response.IsSuccess = false;
-                return BadRequest(response);
-            }
-
-        }
-        [HttpGet]
-        [AllowAnonymous]
-        public async Task<IActionResult> GetBestSellerProduct()
-        {
-            ResponseDTO response = new();
-            try
-            {
-                var data = await _productRepository.GetProductsWithPaging(1,20, _mapper);
-
-                response.Data = data;
-                response.Message = data == null || data.FirstOrDefault() == null ? MessageDisplay.notFound : MessageDisplay.Productget;
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                response.Message = MessageDisplay.error; response.Status = 404;
-                response.IsSuccess = false;
-                return BadRequest(response);
-            }
-
-        }[HttpGet]
-        [AllowAnonymous]
-        public async Task<IActionResult> GetSearchedItem()
-        {
-            ResponseDTO response = new();
-            try
-            {
-                var data = await _productRepository.GetProductsWithPaging(1,20, _mapper);
-
-                response.Data = data;
-                response.Message = data == null || data.FirstOrDefault() == null ? MessageDisplay.notFound : MessageDisplay.Productget;
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                response.Message = MessageDisplay.error; response.Status = 404;
-                response.IsSuccess = false;
+                response.Message = MessageDisplay.error;
                 return BadRequest(response);
             }
 

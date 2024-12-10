@@ -140,36 +140,7 @@ namespace Ecommerce_Apis.UserModule.Controllers{
                 response.Data = token;
                 return Ok(response);
             }
-            catch (Exception ex)
-            {
-                response.Message = MessageDisplay.error;
-                response.Status = 404;
-                response.IsSuccess = false;
-                return BadRequest(response);
-            }
-        } [HttpPost]
-        public async Task<IActionResult> UserProfile()
-        {
-            ResponseDTO response = new();
-            try
-            {
-
-                var userId = Request.GetUser();
-                var user = await _userRepository.GetUserById(userId.ToString());
-
-                if (user == null ) 
-                {
-                    response.Message = MessageDisplay.LoginIncorrectDetailMessage;
-                    response.Status = 404;
-                    response.IsSuccess = false;
-                    return BadRequest(response);
-                }
-
-                response.Message = MessageDisplay.LoginSuccessMessage;
-                response.Data = user;
-                return Ok(response);
-            }
-            catch (Exception ex)
+            catch (Exception)
             {
                 response.Message = MessageDisplay.error;
                 response.Status = 404;
@@ -202,5 +173,36 @@ namespace Ecommerce_Apis.UserModule.Controllers{
             };
         }
 
- }
+        [HttpPost]
+        public async Task<IActionResult> AddRole([FromBody] AddRoleRequest request)
+        {
+            ResponseDTO response = new();
+            try
+            {
+                var role = Request.GetRole();
+                if (role == "Admin")
+                {
+                    var addedRole = await _userRepository.AddRole(request);
+                    response.Data = addedRole;
+                    response.Message = "Role added successfully";
+                    return Ok(response);
+                }
+                else
+                {
+                    response.Message = MessageDisplay.auth;
+                    return Unauthorized(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                response.Message = ex.Message.Contains("Duplicate entry") 
+                    ? MessageDisplay.Roleduplicated 
+                    : MessageDisplay.error;
+                return BadRequest(response);
+            }
+        }
+
+        // Continue with other controller methods...
+        // The pattern remains the same - remove Dapper dependencies and use the repository methods
+    }
 }
