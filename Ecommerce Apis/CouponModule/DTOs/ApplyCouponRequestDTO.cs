@@ -1,0 +1,10 @@
+﻿namespace Ecommerce_Apis.CouponModule.DTOs
+{
+    public class ApplyCouponRequestDTO
+
+    {
+        public string Id { get; set; }
+        public int? ProductId { get; set; }
+        public int? CategoryId { get; set; }
+    }
+}
